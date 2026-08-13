@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Environment / local configuration
+.env
+config/local_config.php
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+
+# Dependencies
+vendor/
+node_modules/
+
+# Temporary files
+*.tmp
+*.temp
+
+# XAMPP / local-only files
+xampp/
