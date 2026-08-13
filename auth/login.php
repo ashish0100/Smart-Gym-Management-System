@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (isset($_SESSION['user_id'])) {
@@ -15,23 +16,40 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-$error = $_GET['error'] ?? '';
-$success = $_GET['success'] ?? '';
+$error = $_SESSION['login_error'] ?? '';
+
+$success =
+    $_SESSION['register_success']
+    ?? $_SESSION['login_success']
+    ?? '';
+
+unset($_SESSION['login_error']);
+unset($_SESSION['register_success']);
+unset($_SESSION['login_success']);
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Login | World Fitness Australia</title>
+    <title>
+        Login | World Fitness Australia
+    </title>
 
-    <link rel="stylesheet"
-          href="../css/style.css">
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
 </head>
 
 <body class="auth-page">
@@ -40,13 +58,17 @@ $success = $_GET['success'] ?? '';
 
     <div class="container nav-container">
 
-        <a href="../index.php"
-           class="logo">
+        <a
+            href="../index.php"
+            class="logo"
+        >
 
             <span class="logo-icon">
 
-                <svg viewBox="0 0 64 64"
-                     aria-hidden="true">
+                <svg
+                    viewBox="0 0 64 64"
+                    aria-hidden="true"
+                >
 
                     <rect
                         x="7"
@@ -93,6 +115,7 @@ $success = $_GET['success'] ?? '';
             </span>
 
             <div>
+
                 <strong>
                     World Fitness Australia
                 </strong>
@@ -100,6 +123,7 @@ $success = $_GET['success'] ?? '';
                 <small>
                     Smart Gym Management
                 </small>
+
             </div>
 
         </a>
@@ -200,19 +224,19 @@ $success = $_GET['success'] ?? '';
 
                 <div class="auth-tabs">
 
-                    <a href="login.php"
-                       class="auth-tab active">
-
+                    <a
+                        href="login.php"
+                        class="auth-tab active"
+                    >
                         Login
-
                     </a>
 
 
-                    <a href="register.php"
-                       class="auth-tab">
-
+                    <a
+                        href="register.php"
+                        class="auth-tab"
+                    >
                         Register
-
                     </a>
 
                 </div>
@@ -231,7 +255,7 @@ $success = $_GET['success'] ?? '';
             </div>
 
 
-            <!-- ERROR MESSAGE -->
+            <!-- ERROR -->
 
             <?php if ($error): ?>
 
@@ -250,7 +274,7 @@ $success = $_GET['success'] ?? '';
             <?php endif; ?>
 
 
-            <!-- SUCCESS MESSAGE -->
+            <!-- SUCCESS -->
 
             <?php if ($success): ?>
 
@@ -309,9 +333,7 @@ $success = $_GET['success'] ?? '';
                             href="#"
                             class="form-link"
                         >
-
                             Forgot Password?
-
                         </a>
 
                     </div>
@@ -352,9 +374,7 @@ $success = $_GET['success'] ?? '';
                     type="submit"
                     class="btn auth-submit"
                 >
-
                     Login
-
                 </button>
 
             </form>
