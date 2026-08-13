@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (isset($_SESSION['user_id'])) {
@@ -15,13 +16,17 @@ if (isset($_SESSION['user_id'])) {
     exit;
 }
 
-$error = $_GET['error'] ?? '';
+$error = $_SESSION['register_error'] ?? '';
+
+unset($_SESSION['register_error']);
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -37,6 +42,7 @@ $error = $_GET['error'] ?? '';
         rel="stylesheet"
         href="../css/style.css"
     >
+
 </head>
 
 <body class="auth-page">
@@ -500,9 +506,7 @@ $error = $_GET['error'] ?? '';
                     type="submit"
                     class="btn auth-submit"
                 >
-
                     Create Account
-
                 </button>
 
             </form>
