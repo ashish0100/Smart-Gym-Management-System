@@ -1898,3 +1898,77 @@ footer {
     }
 
 }
+/* ==================================================
+   FRONTEND UI IMPROVEMENTS
+   Accessibility, interaction and responsive polish
+   ================================================== */
+
+/* Smooth interaction feedback */
+a,
+button,
+input,
+select,
+textarea,
+.nav-link,
+.btn {
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Keyboard accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--accent, #22d3ee);
+    outline-offset: 3px;
+}
+
+/* Button interaction */
+button:hover,
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+button:active,
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Form focus improvement */
+input:focus,
+select:focus,
+textarea:focus {
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.12);
+}
+
+/* Mobile improvements */
+@media (max-width: 768px) {
+    button,
+    .btn {
+        min-height: 44px;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
