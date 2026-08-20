@@ -42,3 +42,13 @@ Authentication testing confirmed that the Smart Gym Management System
 correctly supports secure registration, login, logout, password hashing,
 session management and role-based access control for Member, Trainer
 and Administrator users.
+
+## Regression Review
+
+Reviewed by: Kaushal Parajuli
+
+The authentication test cases were rechecked during Sprint 1 regression testing.
+
+Registration, login, password validation, role-based access, session protection and logout were verified again after system integration.
+
+Result: PASS
