@@ -40,3 +40,13 @@ The Sprint 1 integration testing confirmed that the Smart Gym
 Management System frontend, PHP backend, MySQL database,
 authentication system and Member Dashboard successfully operate
 together as an integrated web application.
+
+## Regression Review
+
+Reviewed by: Kaushal Parajuli
+
+The integration test cases were rechecked during Sprint 1 regression testing.
+
+The complete registration, database, login, session, dashboard and logout flow was verified after integration.
+
+Result: PASS
