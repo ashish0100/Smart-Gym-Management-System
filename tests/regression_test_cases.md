@@ -19,10 +19,10 @@ Register a new member using valid information.
 Registration succeeds and records are created in the users, members and memberships tables.
 
 **Actual Result:**  
-Not Run
+Registration completed successfully and records were created in the users, members and memberships tables.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -35,10 +35,10 @@ Attempt to register using an email address that already exists.
 The system rejects the duplicate email and does not create another user record.
 
 **Actual Result:**  
-Not Run
+The system rejected the duplicate email and no duplicate user record was created.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -51,10 +51,10 @@ Enter an invalid email address during registration.
 The system displays a validation error and registration does not continue.
 
 **Actual Result:**  
-Not Run
+The system displayed a validation error and prevented registration.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -67,10 +67,10 @@ Attempt registration using a password that does not meet the required password r
 The system rejects the password and displays a validation message.
 
 **Actual Result:**  
-Not Run
+The system rejected the password because it did not meet the required password rules.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -83,10 +83,10 @@ Login using a valid member account.
 The user is authenticated and redirected to the Member Dashboard.
 
 **Actual Result:**  
-Not Run
+The member logged in successfully and was redirected to the Member Dashboard.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -99,10 +99,10 @@ Enter the correct email address with an incorrect password.
 Login is rejected.
 
 **Actual Result:**  
-Not Run
+The system rejected the login attempt when an incorrect password was entered.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -115,10 +115,10 @@ Login as a member and attempt to access the Administrator Dashboard.
 Access is denied.
 
 **Actual Result:**  
-Not Run
+The member was prevented from accessing the Administrator Dashboard.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -131,10 +131,10 @@ Login using a valid administrator account.
 The Administrator Dashboard opens successfully.
 
 **Actual Result:**  
-Not Run
+The administrator account logged in successfully and the Administrator Dashboard opened.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -147,10 +147,10 @@ Login using a valid trainer account.
 The Trainer Dashboard opens successfully.
 
 **Actual Result:**  
-Not Run
+The trainer account logged in successfully and the Trainer Dashboard opened.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
@@ -163,16 +163,18 @@ Login, logout, and then attempt to reopen a protected dashboard.
 The user cannot access the protected dashboard without logging in again.
 
 **Actual Result:**  
-Not Run
+After logout, the protected dashboard could not be accessed without logging in again.
 
 **Status:**  
-Not Run
+PASS
 
 ---
 
 ## Testing Summary
 
 Total Test Cases: 10  
-Passed: 0  
+Passed: 10  
 Failed: 0  
-Not Run: 10
+Not Run: 0  
+
+All planned Sprint 1 regression tests passed successfully. Registration, authentication, password validation, role-based access and session protection remained functional after system integration.
