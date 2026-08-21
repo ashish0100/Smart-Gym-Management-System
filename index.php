@@ -1,7 +1,6 @@
 <?php
 session_start();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,10 +14,6 @@ session_start();
 </head>
 
 <body>
-
-<!-- =========================
-     NAVIGATION
-========================= -->
 
 <header class="navbar">
 
@@ -34,7 +29,6 @@ session_start();
         </a>
 
         <nav>
-
             <a href="#home">Home</a>
             <a href="#features">Features</a>
             <a href="#membership">Membership</a>
@@ -47,7 +41,6 @@ session_start();
             <a href="auth/register.php" class="btn btn-small">
                 Join Now
             </a>
-
         </nav>
 
     </div>
@@ -57,10 +50,9 @@ session_start();
 
 <main>
 
-
-<!-- =========================
+<!-- ==========================================
      HERO SECTION
-========================= -->
+     ========================================== -->
 
 <section class="hero" id="home">
 
@@ -82,7 +74,6 @@ session_start();
                 track your attendance and access your fitness
                 information from one convenient platform.
             </p>
-
 
             <div class="hero-actions">
 
@@ -121,8 +112,6 @@ session_start();
         </div>
 
 
-        <!-- DASHBOARD PREVIEW -->
-
         <div class="hero-card">
 
             <div class="dashboard-preview">
@@ -130,15 +119,8 @@ session_start();
                 <div class="preview-header">
 
                     <div>
-
-                        <small>
-                            MEMBER DASHBOARD
-                        </small>
-
-                        <h3>
-                            Welcome to World Fitness
-                        </h3>
-
+                        <small>MEMBER DASHBOARD</small>
+                        <h3>Welcome to World Fitness</h3>
                     </div>
 
                     <span class="status">
@@ -151,54 +133,23 @@ session_start();
                 <div class="preview-grid">
 
                     <div class="preview-item">
-
-                        <span>
-                            Membership
-                        </span>
-
-                        <strong>
-                            Premium Plan
-                        </strong>
-
+                        <span>Membership</span>
+                        <strong>Premium Plan</strong>
                     </div>
 
-
                     <div class="preview-item">
-
-                        <span>
-                            Attendance
-                        </span>
-
-                        <strong>
-                            12 Visits
-                        </strong>
-
+                        <span>Attendance</span>
+                        <strong>12 Visits</strong>
                     </div>
 
-
                     <div class="preview-item">
-
-                        <span>
-                            Booked Classes
-                        </span>
-
-                        <strong>
-                            3 Classes
-                        </strong>
-
+                        <span>Booked Classes</span>
+                        <strong>3 Classes</strong>
                     </div>
 
-
                     <div class="preview-item">
-
-                        <span>
-                            Visit Pack
-                        </span>
-
-                        <strong>
-                            10 Remaining
-                        </strong>
-
+                        <span>Visit Pack</span>
+                        <strong>10 Remaining</strong>
                     </div>
 
                 </div>
@@ -206,13 +157,8 @@ session_start();
 
                 <div class="preview-actions">
 
-                    <span>
-                        Book a Class
-                    </span>
-
-                    <span>
-                        Make Payment
-                    </span>
+                    <span>Book a Class</span>
+                    <span>Make Payment</span>
 
                 </div>
 
@@ -225,10 +171,9 @@ session_start();
 </section>
 
 
-
-<!-- =========================
-     FEATURES
-========================= -->
+<!-- ==========================================
+     FEATURES SECTION
+     ========================================== -->
 
 <section class="features section" id="features">
 
@@ -332,10 +277,11 @@ session_start();
 </section>
 
 
-
-<!-- =========================
-     MEMBERSHIP
-========================= -->
+<!-- ==========================================
+     MEMBERSHIP SECTION
+     Frontend contribution:
+     Improved membership plan comparison UI
+     ========================================== -->
 
 <section class="membership section" id="membership">
 
@@ -348,12 +294,12 @@ session_start();
             </span>
 
             <h2>
-                Choose a plan that works for you
+                Choose the membership that fits your lifestyle
             </h2>
 
             <p>
-                Select a membership option that matches
-                your fitness goals and schedule.
+                Flexible options designed for different fitness goals,
+                schedules and levels of commitment.
             </p>
 
         </div>
@@ -361,28 +307,58 @@ session_start();
 
         <div class="membership-grid">
 
-            <!-- WEEKLY -->
+            <!-- WEEKLY PLAN -->
 
             <article class="plan-card">
 
-                <h3>
-                    Weekly
-                </h3>
+                <div class="plan-header">
 
-                <p>
-                    Flexible short-term access to
-                    World Fitness.
+                    <span class="plan-label">
+                        FLEXIBLE
+                    </span>
+
+                    <h3>
+                        Weekly
+                    </h3>
+
+                </div>
+
+                <p class="plan-description">
+                    Ideal for short-term access or members who
+                    prefer maximum flexibility.
                 </p>
 
+
+                <ul class="plan-features">
+
+                    <li>
+                        ✓ Full gym access
+                    </li>
+
+                    <li>
+                        ✓ Class booking access
+                    </li>
+
+                    <li>
+                        ✓ Member dashboard
+                    </li>
+
+                    <li>
+                        ✓ Attendance tracking
+                    </li>
+
+                </ul>
+
+
                 <a href="auth/register.php"
-                   class="btn btn-outline">
-                    Get Started
+                   class="btn btn-outline plan-button">
+                    Choose Weekly
                 </a>
 
             </article>
 
 
-            <!-- MONTHLY -->
+            <!-- MONTHLY PLAN -->
 
             <article class="plan-card featured">
 
@@ -390,39 +366,102 @@ session_start();
                     MOST POPULAR
                 </span>
 
-                <h3>
-                    Monthly
-                </h3>
 
-                <p>
-                    Our balanced membership for
-                    regular gym users.
+                <div class="plan-header">
+
+                    <span class="plan-label">
+                        BEST VALUE
+                    </span>
+
+                    <h3>
+                        Monthly
+                    </h3>
+
+                </div>
+
+
+                <p class="plan-description">
+                    A balanced option for regular members who want
+                    consistent access without a long-term commitment.
                 </p>
 
+
+                <ul class="plan-features">
+
+                    <li>
+                        ✓ Full gym access
+                    </li>
+
+                    <li>
+                        ✓ Unlimited class booking
+                    </li>
+
+                    <li>
+                        ✓ Member dashboard
+                    </li>
+
+                    <li>
+                        ✓ Payment history
+                    </li>
+
+                </ul>
+
+
                 <a href="auth/register.php"
-                   class="btn">
-                    Join Now
+                   class="btn plan-button">
+                    Choose Monthly
                 </a>
 
             </article>
 
 
-            <!-- ANNUAL -->
+            <!-- ANNUAL PLAN -->
 
             <article class="plan-card">
 
-                <h3>
-                    Annual
-                </h3>
+                <div class="plan-header">
 
-                <p>
-                    Long-term access for
-                    committed members.
+                    <span class="plan-label">
+                        COMMITTED
+                    </span>
+
+                    <h3>
+                        Annual
+                    </h3>
+
+                </div>
+
+
+                <p class="plan-description">
+                    Designed for committed members who want
+                    long-term access and simple membership management.
                 </p>
 
+
+                <ul class="plan-features">
+
+                    <li>
+                        ✓ Full gym access
+                    </li>
+
+                    <li>
+                        ✓ Unlimited class booking
+                    </li>
+
+                    <li>
+                        ✓ Attendance history
+                    </li>
+
+                    <li>
+                        ✓ Long-term membership access
+                    </li>
+
+                </ul>
+
+
                 <a href="auth/register.php"
-                   class="btn btn-outline">
-                    Get Started
+                   class="btn btn-outline plan-button">
+                    Choose Annual
                 </a>
 
             </article>
@@ -434,10 +473,9 @@ session_start();
 </section>
 
 
-
-<!-- =========================
-     ABOUT
-========================= -->
+<!-- ==========================================
+     ABOUT SECTION
+     ========================================== -->
 
 <section class="about section" id="about">
 
@@ -468,159 +506,12 @@ session_start();
 
 </section>
 
-
-
-<!-- =========================
-     WHY CHOOSE US
-========================= -->
-
-<section class="why-us section">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span class="eyebrow">
-                WHY CHOOSE WORLD FITNESS
-            </span>
-
-            <h2>
-                Designed to make your gym experience easier
-            </h2>
-
-            <p>
-                Our digital management platform gives members
-                convenient access to the services they use most.
-            </p>
-
-        </div>
-
-
-        <div class="why-us-grid">
-
-            <!-- CARD 1 -->
-
-            <article class="why-card">
-
-                <div class="why-number">
-                    01
-                </div>
-
-                <h3>
-                    Simple Member Access
-                </h3>
-
-                <p>
-                    View your membership, attendance,
-                    bookings and account details from
-                    one secure dashboard.
-                </p>
-
-            </article>
-
-
-            <!-- CARD 2 -->
-
-            <article class="why-card">
-
-                <div class="why-number">
-                    02
-                </div>
-
-                <h3>
-                    Easy Class Booking
-                </h3>
-
-                <p>
-                    Browse available training sessions
-                    and manage class bookings without
-                    manual paperwork.
-                </p>
-
-            </article>
-
-
-            <!-- CARD 3 -->
-
-            <article class="why-card">
-
-                <div class="why-number">
-                    03
-                </div>
-
-                <h3>
-                    Secure Digital Records
-                </h3>
-
-                <p>
-                    Important membership and payment
-                    information is organised through
-                    a central digital system.
-                </p>
-
-            </article>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-
-<!-- =========================
-     CALL TO ACTION
-========================= -->
-
-<section class="home-cta">
-
-    <div class="container cta-content">
-
-        <div>
-
-            <span class="eyebrow">
-                READY TO GET STARTED?
-            </span>
-
-            <h2>
-                Take control of your fitness journey today.
-            </h2>
-
-            <p>
-                Create your World Fitness Australia account
-                and access your membership, classes and
-                gym services online.
-            </p>
-
-        </div>
-
-
-        <div class="cta-actions">
-
-            <a href="auth/register.php"
-               class="btn">
-                Become a Member
-            </a>
-
-            <a href="auth/login.php"
-               class="btn btn-outline">
-                Member Login
-            </a>
-
-        </div>
-
-    </div>
-
-</section>
-
-
 </main>
 
 
-
-<!-- =========================
+<!-- ==========================================
      FOOTER
-========================= -->
+     ========================================== -->
 
 <footer>
 
