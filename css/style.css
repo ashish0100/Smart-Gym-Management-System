@@ -1898,3 +1898,319 @@ footer {
     }
 
 }
+
+/* =========================================================
+   ATTENDANCE MANAGEMENT
+========================================================= */
+
+.attendance-page .dashboard-panel {
+    margin-bottom: 24px;
+}
+
+.attendance-page .attendance-status-select {
+    min-width: 150px;
+    padding: 11px 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+
+    background: #0d1b2d;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    outline: none;
+    cursor: pointer;
+}
+
+.attendance-page .attendance-status-select:focus {
+    border-color: #21d4e8;
+    box-shadow: 0 0 0 3px rgba(33, 212, 232, 0.12);
+}
+
+
+/* Member attendance row */
+
+.attendance-page .trainer-class-row {
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 1.4fr)
+        minmax(180px, 0.8fr)
+        minmax(220px, auto);
+
+    gap: 28px;
+
+    align-items: center;
+
+    padding: 22px 0;
+}
+
+
+/* Member information */
+
+.attendance-page .trainer-class-info {
+    min-width: 0;
+}
+
+.attendance-page .trainer-class-info strong {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #ffffff;
+
+    font-size: 16px;
+}
+
+.attendance-page .trainer-class-info span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #9fb0c7;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* Attendance form */
+
+.attendance-page .trainer-class-row form {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin: 0;
+}
+
+
+/* Save attendance button */
+
+.attendance-page .attendance-save-button {
+    padding: 11px 18px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #21d4e8;
+    color: #06111f;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.attendance-page .attendance-save-button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+
+/* Class selection */
+
+.attendance-page form label {
+    display: inline-block;
+
+    margin-right: 10px;
+
+    color: #ffffff;
+
+    font-weight: 600;
+}
+
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+
+    .attendance-page .trainer-class-row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .attendance-page .trainer-class-row form {
+        justify-content: flex-start;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .attendance-page .trainer-class-row form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .attendance-page .attendance-status-select {
+        width: 100%;
+    }
+
+    .attendance-page .attendance-save-button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   FINAL ATTENDANCE STATUS FIX
+========================================================= */
+
+.attendance-page .attendance-member-row {
+    display: grid;
+    grid-template-columns: 1.3fr 0.8fr 1fr;
+    gap: 32px;
+    align-items: center;
+
+    padding: 22px;
+    margin-top: 15px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+
+    background: rgba(7, 22, 39, 0.35);
+}
+
+
+/* Member information */
+
+.attendance-page .attendance-member-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.attendance-page .attendance-member-name {
+    display: block;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.attendance-page .attendance-member-email {
+    display: block;
+    color: #9fb0c7;
+    font-size: 13px;
+}
+
+
+/* Current attendance */
+
+.attendance-page .attendance-current-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 7px;
+}
+
+.attendance-page .attendance-status-label {
+    display: block;
+
+    color: #8fa3bb;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.attendance-page .attendance-status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 6px 12px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
+/* Present */
+
+.attendance-page .attendance-status-present {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #4ade80;
+}
+
+
+/* Late */
+
+.attendance-page .attendance-status-late {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+}
+
+
+/* Absent */
+
+.attendance-page .attendance-status-absent {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
+}
+
+
+/* Not recorded */
+
+.attendance-page .attendance-status-none {
+    background: rgba(148, 163, 184, 0.10);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    color: #cbd5e1;
+}
+
+
+/* Check-in time */
+
+.attendance-page .attendance-checkin {
+    display: block;
+    color: #91a4bb;
+    font-size: 12px;
+}
+
+
+/* Form */
+
+.attendance-page .attendance-record-form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 850px) {
+
+    .attendance-page .attendance-member-row {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .attendance-page .attendance-record-form {
+        justify-content: flex-start;
+    }
+
+}
