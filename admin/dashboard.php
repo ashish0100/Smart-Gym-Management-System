@@ -559,67 +559,28 @@ function adminEscape(string $value): string
                 </div>
 
 
-                <div class="admin-management-card">
+  <a
+    href="classes.php"
+    class="admin-management-card admin-management-link"
+>
 
-                    <span class="quick-icon">
-                        📅
-                    </span>
+    <span class="quick-icon">
+        📅
+    </span>
 
-                    <div>
+    <div>
 
-                        <strong>
-                            Class Management
-                        </strong>
+        <strong>
+            Class Management
+        </strong>
 
-                        <small>
-                            Create and manage gym sessions
-                        </small>
+        <small>
+            Create and manage gym sessions
+        </small>
 
-                    </div>
+    </div>
 
-                </div>
-
-
-                <div class="admin-management-card">
-
-                    <span class="quick-icon">
-                        💳
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Payment Management
-                        </strong>
-
-                        <small>
-                            Review member payments
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="admin-management-card">
-
-                    <span class="quick-icon">
-                        📊
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Reports
-                        </strong>
-
-                        <small>
-                            Review gym performance data
-                        </small>
-
-                    </div>
-
-                </div>
+</a>
 
 
                 <div class="admin-management-card">
