@@ -2214,3 +2214,416 @@ footer {
     }
 
 }
+
+/* =========================================================
+   CLASS MANAGEMENT - ITERATION 2
+========================================================= */
+
+.class-management-page .dashboard-panel {
+    margin-bottom: 28px;
+}
+
+
+/* ---------------------------------------------------------
+   CLASS FORM
+--------------------------------------------------------- */
+
+.class-management-form {
+    margin-top: 10px;
+}
+
+.class-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.class-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.class-form-full {
+    grid-column: 1 / -1;
+}
+
+.class-form-field label {
+    color: #dbe7f5;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.class-form-field input,
+.class-form-field select,
+.class-form-field textarea {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9px;
+
+    background: #0b1728;
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.class-form-field textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.class-form-field input:focus,
+.class-form-field select:focus,
+.class-form-field textarea:focus {
+    border-color: #21d4e8;
+
+    box-shadow:
+        0 0 0 3px rgba(33, 212, 232, 0.12);
+}
+
+.class-form-field input::placeholder,
+.class-form-field textarea::placeholder {
+    color: #6f8299;
+}
+
+
+/* ---------------------------------------------------------
+   FORM ACTIONS
+--------------------------------------------------------- */
+
+.class-form-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 24px;
+}
+
+.class-form-actions .attendance-save-button {
+    min-width: 160px;
+}
+
+
+/* ---------------------------------------------------------
+   CLASS LIST
+--------------------------------------------------------- */
+
+.class-management-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.class-management-card {
+    padding: 22px;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+
+    background: rgba(7, 22, 39, 0.38);
+}
+
+.class-card-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.class-card-main h3 {
+    margin: 12px 0 6px;
+
+    color: #ffffff;
+
+    font-size: 20px;
+}
+
+.class-card-main p {
+    margin: 0;
+
+    color: #9fb0c7;
+
+    font-size: 13px;
+}
+
+
+/* ---------------------------------------------------------
+   BOOKING COUNT
+--------------------------------------------------------- */
+
+.class-card-bookings {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.class-card-bookings strong {
+    color: #ffffff;
+
+    font-size: 20px;
+}
+
+.class-card-bookings span {
+    color: #8fa3bb;
+
+    font-size: 12px;
+}
+
+
+/* ---------------------------------------------------------
+   CLASS STATUS BADGES
+--------------------------------------------------------- */
+
+.class-status-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 6px 11px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.class-status-available {
+    border: 1px solid rgba(34, 197, 94, 0.35);
+
+    background: rgba(34, 197, 94, 0.12);
+
+    color: #4ade80;
+}
+
+.class-status-full {
+    border: 1px solid rgba(245, 158, 11, 0.35);
+
+    background: rgba(245, 158, 11, 0.12);
+
+    color: #fbbf24;
+}
+
+.class-status-cancelled {
+    border: 1px solid rgba(239, 68, 68, 0.35);
+
+    background: rgba(239, 68, 68, 0.12);
+
+    color: #f87171;
+}
+
+.class-status-completed {
+    border: 1px solid rgba(59, 130, 246, 0.35);
+
+    background: rgba(59, 130, 246, 0.12);
+
+    color: #60a5fa;
+}
+
+
+/* ---------------------------------------------------------
+   CLASS DETAILS
+--------------------------------------------------------- */
+
+.class-card-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+
+    margin-top: 22px;
+    padding-top: 18px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.class-card-details div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.class-card-details span {
+    color: #8fa3bb;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.class-card-details strong {
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+
+/* ---------------------------------------------------------
+   DESCRIPTION
+--------------------------------------------------------- */
+
+.class-card-description {
+    margin: 18px 0 0;
+
+    color: #aabbd0;
+
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* ---------------------------------------------------------
+   CLASS ACTION BUTTONS
+--------------------------------------------------------- */
+
+.class-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.class-card-actions form {
+    margin: 0;
+}
+
+.class-edit-button,
+.class-cancel-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 110px;
+
+    padding: 10px 16px;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.class-edit-button {
+    border: 1px solid rgba(33, 212, 232, 0.35);
+
+    background: rgba(33, 212, 232, 0.10);
+
+    color: #21d4e8;
+}
+
+.class-cancel-button {
+    border: 1px solid rgba(239, 68, 68, 0.35);
+
+    background: rgba(239, 68, 68, 0.10);
+
+    color: #f87171;
+}
+
+.class-edit-button:hover,
+.class-cancel-button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSIVE CLASS MANAGEMENT
+--------------------------------------------------------- */
+
+@media (max-width: 850px) {
+
+    .class-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .class-form-full {
+        grid-column: auto;
+    }
+
+    .class-card-main {
+        flex-direction: column;
+    }
+
+    .class-card-bookings {
+        align-items: flex-start;
+    }
+
+    .class-card-details {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .class-card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .class-edit-button,
+    .class-cancel-button {
+        width: 100%;
+    }
+
+    .class-form-actions {
+        justify-content: stretch;
+    }
+
+    .class-form-actions .attendance-save-button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   ADMIN MANAGEMENT LINKS
+========================================================= */
+
+.admin-management-link {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.admin-management-link:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(33, 212, 232, 0.35);
+
+    background: rgba(33, 212, 232, 0.05);
+}
+
+.admin-management-link:focus {
+    outline: 2px solid #21d4e8;
+    outline-offset: 3px;
+}
