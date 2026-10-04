@@ -184,8 +184,8 @@ try {
                  FROM classes
                  WHERE class_date >= CURDATE()
                  AND status IN (
-                     'available',
-                     'full'
+                    'available',
+                    'full'
                  )"
             )
             ->fetchColumn();
@@ -205,9 +205,7 @@ try {
                         SUM(amount),
                         0
                     )
-
                  FROM payments
-
                  WHERE payment_status =
                     'completed'"
             )
@@ -223,11 +221,9 @@ try {
     $recentMemberStatement =
         $pdo->query(
             'SELECT
-
                 u.first_name,
                 u.last_name,
                 u.email,
-
                 m.registration_date
 
              FROM members m
@@ -259,7 +255,6 @@ try {
     $recentPaymentStatement =
         $pdo->query(
             'SELECT
-
                 p.payment_id,
                 p.amount,
                 p.payment_status,
@@ -329,7 +324,7 @@ try {
 
     <link
         rel="stylesheet"
-        href="../css/style.css?v=8"
+        href="../css/style.css?v=10"
     >
 
 </head>
@@ -434,11 +429,13 @@ NAVIGATION
                 </span>
 
                 <strong>
+
                     <?php
                     echo adminEscape(
                         $adminName
                     );
                     ?>
+
                 </strong>
 
             </div>
@@ -531,9 +528,11 @@ MAIN CONTENT
                 </span>
 
                 <strong>
+
                     <?php
                     echo $totalMembers;
                     ?>
+
                 </strong>
 
                 <small>
@@ -552,9 +551,11 @@ MAIN CONTENT
                 </span>
 
                 <strong>
+
                     <?php
                     echo $activeMemberships;
                     ?>
+
                 </strong>
 
                 <small>
@@ -573,9 +574,11 @@ MAIN CONTENT
                 </span>
 
                 <strong>
+
                     <?php
                     echo $confirmedBookings;
                     ?>
+
                 </strong>
 
                 <small>
@@ -629,9 +632,11 @@ MAIN CONTENT
                 </span>
 
                 <strong>
+
                     <?php
                     echo $totalTrainers;
                     ?>
+
                 </strong>
 
             </div>
@@ -644,9 +649,11 @@ MAIN CONTENT
                 </span>
 
                 <strong>
+
                     <?php
                     echo $pendingMemberships;
                     ?>
+
                 </strong>
 
             </div>
@@ -659,9 +666,11 @@ MAIN CONTENT
                 </span>
 
                 <strong>
+
                     <?php
                     echo $upcomingClasses;
                     ?>
+
                 </strong>
 
             </div>
@@ -829,10 +838,17 @@ MAIN CONTENT
                 <!--
                 ==========================================================
                 NOTIFICATIONS
+                SGMS-17
                 ==========================================================
                 -->
 
-                <div class="admin-management-card">
+                <a
+                    href="../notifications/index.php"
+                    class="
+                        admin-management-card
+                        admin-management-link
+                    "
+                >
 
                     <span class="quick-icon">
                         🔔
@@ -850,7 +866,7 @@ MAIN CONTENT
 
                     </div>
 
-                </div>
+                </a>
 
 
             </div>
