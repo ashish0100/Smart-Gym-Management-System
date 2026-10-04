@@ -3143,3 +3143,698 @@ footer {
     }
 
 }
+
+/*
+==========================================================================
+SGMS-16
+PAYMENT MANAGEMENT
+WORLD FITNESS AUSTRALIA
+==========================================================================
+*/
+
+.payment-page {
+    min-height: 100vh;
+}
+
+/*
+==========================================================================
+HERO
+==========================================================================
+*/
+
+.payment-hero {
+    margin: 0 0 32px;
+}
+
+.payment-hero h1 {
+    margin: 12px 0 8px;
+
+    font-size:
+        clamp(
+            2.2rem,
+            5vw,
+            4rem
+        );
+
+    line-height: 1.05;
+}
+
+.payment-hero p {
+    max-width: 780px;
+
+    margin: 0;
+
+    color: #aebed2;
+
+    font-size: 1.05rem;
+
+    line-height: 1.7;
+}
+
+/*
+==========================================================================
+ALERTS
+==========================================================================
+*/
+
+.payment-alert {
+    margin: 0 0 24px;
+
+    padding:
+        16px
+        18px;
+
+    border: 1px solid;
+
+    border-radius: 14px;
+
+    font-weight: 700;
+}
+
+.payment-alert-success {
+    color: #4ade80;
+
+    background:
+        rgba(
+            34,
+            197,
+            94,
+            0.08
+        );
+
+    border-color:
+        rgba(
+            34,
+            197,
+            94,
+            0.35
+        );
+}
+
+.payment-alert-error {
+    color: #fb7185;
+
+    background:
+        rgba(
+            244,
+            63,
+            94,
+            0.08
+        );
+
+    border-color:
+        rgba(
+            244,
+            63,
+            94,
+            0.35
+        );
+}
+
+/*
+==========================================================================
+SUMMARY
+==========================================================================
+*/
+
+.payment-summary-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 20px;
+
+    margin:
+        0
+        0
+        28px;
+}
+
+.payment-summary-card {
+    min-height: 160px;
+
+    padding: 24px;
+
+    border:
+        1px
+        solid
+        #263b55;
+
+    border-radius: 18px;
+
+    background: #142a44;
+}
+
+.payment-summary-card span,
+.payment-summary-card small {
+    display: block;
+
+    color: #9fb0c6;
+}
+
+.payment-summary-card strong {
+    display: block;
+
+    margin:
+        18px
+        0
+        14px;
+
+    color: #f5f8fc;
+
+    font-size: 2rem;
+
+    line-height: 1;
+}
+
+/*
+==========================================================================
+PANELS
+==========================================================================
+*/
+
+.payment-panel {
+    margin:
+        0
+        0
+        28px;
+
+    padding: 28px;
+
+    border:
+        1px
+        solid
+        #263b55;
+
+    border-radius: 20px;
+
+    background: #142a44;
+}
+
+.payment-section-heading {
+    margin:
+        0
+        0
+        24px;
+}
+
+.payment-section-heading h2 {
+    margin:
+        8px
+        0;
+
+    font-size: 1.8rem;
+}
+
+.payment-section-heading p {
+    margin: 0;
+
+    color: #9fb0c6;
+
+    line-height: 1.6;
+}
+
+/*
+==========================================================================
+FORM
+==========================================================================
+*/
+
+.payment-form {
+    margin-top: 20px;
+}
+
+.payment-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 18px;
+}
+
+.payment-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.payment-field label {
+    color: #edf4fb;
+
+    font-weight: 700;
+}
+
+.payment-field input,
+.payment-field select,
+.payment-status-form select {
+    width: 100%;
+
+    min-height: 46px;
+
+    padding:
+        10px
+        12px;
+
+    border:
+        1px
+        solid
+        #31465f;
+
+    border-radius: 10px;
+
+    background: #0c1d31;
+
+    color: #f5f8fc;
+
+    font: inherit;
+}
+
+.payment-field input:focus,
+.payment-field select:focus,
+.payment-status-form select:focus {
+    outline:
+        2px
+        solid
+        #21d4e8;
+
+    outline-offset: 2px;
+}
+
+.payment-form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 22px;
+}
+
+/*
+==========================================================================
+BUTTONS
+==========================================================================
+*/
+
+.payment-primary-button,
+.payment-small-button {
+    border: 0;
+
+    border-radius: 10px;
+
+    background: #27c7df;
+
+    color: #04131f;
+
+    font: inherit;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+.payment-primary-button {
+    min-width: 180px;
+
+    min-height: 48px;
+
+    padding:
+        12px
+        20px;
+}
+
+.payment-small-button {
+    min-height: 40px;
+
+    padding:
+        8px
+        14px;
+}
+
+.payment-primary-button:hover,
+.payment-small-button:hover {
+    filter:
+        brightness(
+            1.08
+        );
+}
+
+/*
+==========================================================================
+EMPTY STATE
+==========================================================================
+*/
+
+.payment-empty {
+    padding:
+        42px
+        20px;
+
+    border:
+        1px
+        dashed
+        #31465f;
+
+    border-radius: 14px;
+
+    color: #9fb0c6;
+
+    text-align: center;
+}
+
+/*
+==========================================================================
+PAYMENT TABLE
+==========================================================================
+*/
+
+.payment-table-wrap {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.payment-table {
+    width: 100%;
+
+    min-width: 980px;
+
+    border-collapse: collapse;
+}
+
+.payment-table th,
+.payment-table td {
+    padding:
+        16px
+        14px;
+
+    border-bottom:
+        1px
+        solid
+        #263b55;
+
+    text-align: left;
+
+    vertical-align: middle;
+}
+
+.payment-table th {
+    color: #8fa4bd;
+
+    font-size: 0.78rem;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.payment-table td {
+    color: #e8eef6;
+}
+
+.payment-table td strong,
+.payment-table td small {
+    display: block;
+}
+
+.payment-table td small {
+    margin-top: 4px;
+
+    color: #8fa4bd;
+}
+
+/*
+==========================================================================
+AMOUNT
+==========================================================================
+*/
+
+.payment-amount {
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+/*
+==========================================================================
+TRANSACTION REFERENCE
+==========================================================================
+*/
+
+.payment-reference {
+    display: inline-block;
+
+    max-width: 180px;
+
+    overflow-wrap: anywhere;
+
+    color: #aebed2;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        monospace;
+
+    font-size: 0.85rem;
+}
+
+.payment-muted {
+    color: #71849b;
+}
+
+/*
+==========================================================================
+STATUS BADGES
+==========================================================================
+*/
+
+.payment-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 94px;
+
+    padding:
+        7px
+        10px;
+
+    border: 1px solid;
+
+    border-radius: 999px;
+
+    font-size: 0.75rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.04em;
+}
+
+/*
+==========================================================================
+COMPLETED
+==========================================================================
+*/
+
+.payment-status-completed,
+.payment-status-paid,
+.payment-status-success {
+    color: #4ade80;
+
+    background:
+        rgba(
+            34,
+            197,
+            94,
+            0.08
+        );
+
+    border-color:
+        rgba(
+            34,
+            197,
+            94,
+            0.35
+        );
+}
+
+/*
+==========================================================================
+PENDING
+==========================================================================
+*/
+
+.payment-status-pending,
+.payment-status-processing {
+    color: #fbbf24;
+
+    background:
+        rgba(
+            245,
+            158,
+            11,
+            0.08
+        );
+
+    border-color:
+        rgba(
+            245,
+            158,
+            11,
+            0.35
+        );
+}
+
+/*
+==========================================================================
+FAILED / CANCELLED
+==========================================================================
+*/
+
+.payment-status-failed,
+.payment-status-cancelled,
+.payment-status-refunded {
+    color: #fb7185;
+
+    background:
+        rgba(
+            244,
+            63,
+            94,
+            0.08
+        );
+
+    border-color:
+        rgba(
+            244,
+            63,
+            94,
+            0.35
+        );
+}
+
+/*
+==========================================================================
+STATUS UPDATE
+==========================================================================
+*/
+
+.payment-status-form {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.payment-status-form select {
+    min-width: 125px;
+}
+
+/*
+==========================================================================
+TABLE HOVER
+==========================================================================
+*/
+
+.payment-table tbody tr {
+    transition:
+        background
+        0.2s
+        ease;
+}
+
+.payment-table tbody tr:hover {
+    background:
+        rgba(
+            33,
+            212,
+            232,
+            0.03
+        );
+}
+
+/*
+==========================================================================
+RESPONSIVE
+==========================================================================
+*/
+
+@media (
+    max-width: 1000px
+) {
+
+    .payment-summary-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+}
+
+/*
+==========================================================================
+MOBILE
+==========================================================================
+*/
+
+@media (
+    max-width: 700px
+) {
+
+    .payment-summary-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .payment-form-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .payment-panel {
+        padding: 20px;
+    }
+
+    .payment-form-actions {
+        justify-content:
+            stretch;
+    }
+
+    .payment-primary-button {
+        width: 100%;
+    }
+
+    .payment-status-form {
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+    }
+
+}
