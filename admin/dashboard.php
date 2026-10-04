@@ -6,6 +6,13 @@ session_start();
 
 require_once __DIR__ . '/../config/database.php';
 
+/*
+|--------------------------------------------------------------------------
+| Smart Gym Management System
+| Administrator Dashboard
+|--------------------------------------------------------------------------
+*/
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,17 +25,19 @@ if (
     !isset($_SESSION['logged_in']) ||
     $_SESSION['logged_in'] !== true
 ) {
+
     $_SESSION['login_error'] =
         'Please log in to access the administration area.';
 
     header('Location: ../auth/login.php');
+
     exit;
 }
 
 
 /*
 |--------------------------------------------------------------------------
-| Admin Role Check
+| Administrator Role Check
 |--------------------------------------------------------------------------
 */
 
@@ -36,149 +45,257 @@ if (
     !isset($_SESSION['role']) ||
     $_SESSION['role'] !== 'admin'
 ) {
+
     http_response_code(403);
 
-    exit('Access denied. Administrator access is required.');
+    exit(
+        'Access denied. Administrator access is required.'
+    );
 }
 
 
 /*
 |--------------------------------------------------------------------------
-| Current Admin
+| Current Administrator
 |--------------------------------------------------------------------------
 */
 
 $adminName =
-    $_SESSION['first_name'] ?? 'Administrator';
+    (string) (
+        $_SESSION['first_name']
+        ?? 'Administrator'
+    );
 
 
 /*
 |--------------------------------------------------------------------------
-| Load Dashboard Statistics
+| Escape Helper
+|--------------------------------------------------------------------------
+*/
+
+function adminEscape(
+    string $value
+): string {
+
+    return htmlspecialchars(
+        $value,
+        ENT_QUOTES,
+        'UTF-8'
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard Statistics
 |--------------------------------------------------------------------------
 */
 
 try {
 
-    // Total members
-    $totalMembers = (int) $pdo
-        ->query(
-            'SELECT COUNT(*)
-             FROM members'
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Total Members
+    |--------------------------------------------------------------------------
+    */
+
+    $totalMembers =
+        (int) $pdo
+            ->query(
+                'SELECT COUNT(*)
+                 FROM members'
+            )
+            ->fetchColumn();
 
 
-    // Total trainers
-    $totalTrainers = (int) $pdo
-        ->query(
-            'SELECT COUNT(*)
-             FROM trainers'
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Total Trainers
+    |--------------------------------------------------------------------------
+    */
+
+    $totalTrainers =
+        (int) $pdo
+            ->query(
+                'SELECT COUNT(*)
+                 FROM trainers'
+            )
+            ->fetchColumn();
 
 
-    // Active memberships
-    $activeMemberships = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM memberships
-             WHERE status = 'active'"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Active Memberships
+    |--------------------------------------------------------------------------
+    */
+
+    $activeMemberships =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM memberships
+                 WHERE status = 'active'"
+            )
+            ->fetchColumn();
 
 
-    // Pending memberships
-    $pendingMemberships = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM memberships
-             WHERE status = 'pending'"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Pending Memberships
+    |--------------------------------------------------------------------------
+    */
+
+    $pendingMemberships =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM memberships
+                 WHERE status = 'pending'"
+            )
+            ->fetchColumn();
 
 
-    // Confirmed bookings
-    $confirmedBookings = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM bookings
-             WHERE status = 'confirmed'"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Confirmed Bookings
+    |--------------------------------------------------------------------------
+    */
+
+    $confirmedBookings =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM bookings
+                 WHERE status = 'confirmed'"
+            )
+            ->fetchColumn();
 
 
-    // Upcoming classes
-    $upcomingClasses = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM classes
-             WHERE class_date >= CURDATE()
-             AND status IN ('available', 'full')"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Upcoming Classes
+    |--------------------------------------------------------------------------
+    */
+
+    $upcomingClasses =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM classes
+                 WHERE class_date >= CURDATE()
+                 AND status IN (
+                     'available',
+                     'full'
+                 )"
+            )
+            ->fetchColumn();
 
 
-    // Completed revenue
-    $totalRevenue = (float) $pdo
-        ->query(
-            "SELECT COALESCE(SUM(amount), 0)
-             FROM payments
-             WHERE payment_status = 'completed'"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Completed Revenue
+    |--------------------------------------------------------------------------
+    */
+
+    $totalRevenue =
+        (float) $pdo
+            ->query(
+                "SELECT
+                    COALESCE(
+                        SUM(amount),
+                        0
+                    )
+
+                 FROM payments
+
+                 WHERE payment_status =
+                    'completed'"
+            )
+            ->fetchColumn();
 
 
-    // Recent members
-    $recentMemberStatement = $pdo->query(
-        'SELECT
-            u.first_name,
-            u.last_name,
-            u.email,
-            m.registration_date
+    /*
+    |--------------------------------------------------------------------------
+    | Recent Members
+    |--------------------------------------------------------------------------
+    */
 
-         FROM members m
+    $recentMemberStatement =
+        $pdo->query(
+            'SELECT
 
-         INNER JOIN users u
-            ON m.user_id = u.user_id
+                u.first_name,
+                u.last_name,
+                u.email,
 
-         ORDER BY m.member_id DESC
+                m.registration_date
 
-         LIMIT 5'
-    );
+             FROM members m
+
+             INNER JOIN users u
+                ON m.user_id =
+                    u.user_id
+
+             ORDER BY
+                m.member_id DESC
+
+             LIMIT 5'
+        );
+
 
     $recentMembers =
-        $recentMemberStatement->fetchAll();
+        $recentMemberStatement
+            ->fetchAll(
+                PDO::FETCH_ASSOC
+            );
 
 
-    // Recent payments
-    $recentPaymentStatement = $pdo->query(
-        'SELECT
-            p.amount,
-            p.payment_status,
-            p.payment_date,
-            p.transaction_reference,
-            u.first_name,
-            u.last_name
+    /*
+    |--------------------------------------------------------------------------
+    | Recent Payments
+    |--------------------------------------------------------------------------
+    */
 
-         FROM payments p
+    $recentPaymentStatement =
+        $pdo->query(
+            'SELECT
 
-         INNER JOIN members m
-            ON p.member_id = m.member_id
+                p.payment_id,
+                p.amount,
+                p.payment_status,
+                p.payment_date,
+                p.transaction_reference,
 
-         INNER JOIN users u
-            ON m.user_id = u.user_id
+                u.first_name,
+                u.last_name
 
-         ORDER BY p.payment_id DESC
+             FROM payments p
 
-         LIMIT 5'
-    );
+             INNER JOIN members m
+                ON p.member_id =
+                    m.member_id
+
+             INNER JOIN users u
+                ON m.user_id =
+                    u.user_id
+
+             ORDER BY
+                p.payment_id DESC
+
+             LIMIT 5'
+        );
+
 
     $recentPayments =
-        $recentPaymentStatement->fetchAll();
+        $recentPaymentStatement
+            ->fetchAll(
+                PDO::FETCH_ASSOC
+            );
 
 
-} catch (PDOException $exception) {
+} catch (
+    PDOException $exception
+) {
 
     error_log(
         'Admin dashboard error: ' .
@@ -192,24 +309,7 @@ try {
     );
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Helper
-|--------------------------------------------------------------------------
-*/
-
-function adminEscape(string $value): string
-{
-    return htmlspecialchars(
-        $value,
-        ENT_QUOTES,
-        'UTF-8'
-    );
-}
-
 ?>
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -229,7 +329,7 @@ function adminEscape(string $value): string
 
     <link
         rel="stylesheet"
-        href="../css/style.css"
+        href="../css/style.css?v=8"
     >
 
 </head>
@@ -238,9 +338,20 @@ function adminEscape(string $value): string
 <body class="dashboard-page">
 
 
+<!--
+==========================================================================
+NAVIGATION
+==========================================================================
+-->
+
 <header class="dashboard-navbar">
 
-    <div class="container dashboard-nav-container">
+    <div
+        class="
+            container
+            dashboard-nav-container
+        "
+    >
 
         <a
             href="dashboard.php"
@@ -259,40 +370,40 @@ function adminEscape(string $value): string
                         y="24"
                         width="8"
                         height="16"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="16"
                         y="20"
                         width="7"
                         height="24"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="41"
                         y="20"
                         width="7"
                         height="24"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="49"
                         y="24"
                         width="8"
                         height="16"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="22"
                         y="29"
                         width="20"
                         height="6"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                 </svg>
 
@@ -324,7 +435,9 @@ function adminEscape(string $value): string
 
                 <strong>
                     <?php
-                    echo adminEscape($adminName);
+                    echo adminEscape(
+                        $adminName
+                    );
                     ?>
                 </strong>
 
@@ -350,12 +463,22 @@ function adminEscape(string $value): string
 </header>
 
 
+<!--
+==========================================================================
+MAIN CONTENT
+==========================================================================
+-->
+
 <main class="dashboard-main">
 
     <div class="container">
 
 
-        <!-- WELCOME -->
+        <!--
+        ==================================================================
+        WELCOME
+        ==================================================================
+        -->
 
         <section class="dashboard-welcome">
 
@@ -379,7 +502,10 @@ function adminEscape(string $value): string
 
 
             <span
-                class="membership-status status-active"
+                class="
+                    membership-status
+                    status-active
+                "
             >
                 SYSTEM ONLINE
             </span>
@@ -387,9 +513,16 @@ function adminEscape(string $value): string
         </section>
 
 
-        <!-- SUMMARY -->
+        <!--
+        ==================================================================
+        MAIN SUMMARY CARDS
+        ==================================================================
+        -->
 
         <section class="dashboard-summary">
+
+
+            <!-- TOTAL MEMBERS -->
 
             <article class="summary-card">
 
@@ -398,7 +531,9 @@ function adminEscape(string $value): string
                 </span>
 
                 <strong>
-                    <?php echo $totalMembers; ?>
+                    <?php
+                    echo $totalMembers;
+                    ?>
                 </strong>
 
                 <small>
@@ -408,6 +543,8 @@ function adminEscape(string $value): string
             </article>
 
 
+            <!-- ACTIVE MEMBERSHIPS -->
+
             <article class="summary-card">
 
                 <span class="summary-label">
@@ -415,7 +552,9 @@ function adminEscape(string $value): string
                 </span>
 
                 <strong>
-                    <?php echo $activeMemberships; ?>
+                    <?php
+                    echo $activeMemberships;
+                    ?>
                 </strong>
 
                 <small>
@@ -425,6 +564,8 @@ function adminEscape(string $value): string
             </article>
 
 
+            <!-- BOOKINGS -->
+
             <article class="summary-card">
 
                 <span class="summary-label">
@@ -432,7 +573,9 @@ function adminEscape(string $value): string
                 </span>
 
                 <strong>
-                    <?php echo $confirmedBookings; ?>
+                    <?php
+                    echo $confirmedBookings;
+                    ?>
                 </strong>
 
                 <small>
@@ -442,6 +585,8 @@ function adminEscape(string $value): string
             </article>
 
 
+            <!-- REVENUE -->
+
             <article class="summary-card">
 
                 <span class="summary-label">
@@ -449,12 +594,14 @@ function adminEscape(string $value): string
                 </span>
 
                 <strong>
+
                     $<?php
                     echo number_format(
                         $totalRevenue,
                         2
                     );
                     ?>
+
                 </strong>
 
                 <small>
@@ -466,37 +613,76 @@ function adminEscape(string $value): string
         </section>
 
 
-        <!-- SECOND SUMMARY -->
+        <!--
+        ==================================================================
+        SECOND SUMMARY
+        ==================================================================
+        -->
 
         <section class="admin-mini-summary">
 
-            <div>
-                <span>Trainers</span>
-                <strong>
-                    <?php echo $totalTrainers; ?>
-                </strong>
-            </div>
 
             <div>
-                <span>Pending Memberships</span>
+
+                <span>
+                    Trainers
+                </span>
+
                 <strong>
-                    <?php echo $pendingMemberships; ?>
+                    <?php
+                    echo $totalTrainers;
+                    ?>
                 </strong>
+
             </div>
 
+
             <div>
-                <span>Upcoming Classes</span>
+
+                <span>
+                    Pending Memberships
+                </span>
+
                 <strong>
-                    <?php echo $upcomingClasses; ?>
+                    <?php
+                    echo $pendingMemberships;
+                    ?>
                 </strong>
+
             </div>
+
+
+            <div>
+
+                <span>
+                    Upcoming Classes
+                </span>
+
+                <strong>
+                    <?php
+                    echo $upcomingClasses;
+                    ?>
+                </strong>
+
+            </div>
+
 
         </section>
 
 
-        <!-- MANAGEMENT AREAS -->
+        <!--
+        ==================================================================
+        MANAGEMENT AREAS
+        ==================================================================
+        -->
 
-        <section class="dashboard-panel admin-management-panel">
+        <section
+            class="
+                dashboard-panel
+                admin-management-panel
+            "
+        >
+
 
             <div class="panel-header">
 
@@ -516,6 +702,13 @@ function adminEscape(string $value): string
 
 
             <div class="admin-management-grid">
+
+
+                <!--
+                ==========================================================
+                MEMBER MANAGEMENT
+                ==========================================================
+                -->
 
                 <div class="admin-management-card">
 
@@ -538,6 +731,12 @@ function adminEscape(string $value): string
                 </div>
 
 
+                <!--
+                ==========================================================
+                TRAINER MANAGEMENT
+                ==========================================================
+                -->
+
                 <div class="admin-management-card">
 
                     <span class="quick-icon">
@@ -559,29 +758,79 @@ function adminEscape(string $value): string
                 </div>
 
 
-  <a
-    href="classes.php"
-    class="admin-management-card admin-management-link"
->
+                <!--
+                ==========================================================
+                CLASS MANAGEMENT
+                SGMS-12
+                ==========================================================
+                -->
 
-    <span class="quick-icon">
-        📅
-    </span>
+                <a
+                    href="classes.php"
+                    class="
+                        admin-management-card
+                        admin-management-link
+                    "
+                >
 
-    <div>
+                    <span class="quick-icon">
+                        📅
+                    </span>
 
-        <strong>
-            Class Management
-        </strong>
+                    <div>
 
-        <small>
-            Create and manage gym sessions
-        </small>
+                        <strong>
+                            Class Management
+                        </strong>
 
-    </div>
+                        <small>
+                            Create and manage gym sessions
+                        </small>
 
-</a>
+                    </div>
 
+                </a>
+
+
+                <!--
+                ==========================================================
+                PAYMENT MANAGEMENT
+                SGMS-16
+                ==========================================================
+                -->
+
+                <a
+                    href="../payment/index.php"
+                    class="
+                        admin-management-card
+                        admin-management-link
+                    "
+                >
+
+                    <span class="quick-icon">
+                        💳
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Payment Management
+                        </strong>
+
+                        <small>
+                            Record and manage member payments
+                        </small>
+
+                    </div>
+
+                </a>
+
+
+                <!--
+                ==========================================================
+                NOTIFICATIONS
+                ==========================================================
+                -->
 
                 <div class="admin-management-card">
 
@@ -603,19 +852,29 @@ function adminEscape(string $value): string
 
                 </div>
 
+
             </div>
 
         </section>
 
 
-        <!-- RECENT ACTIVITY -->
+        <!--
+        ==================================================================
+        RECENT ACTIVITY
+        ==================================================================
+        -->
 
         <section class="dashboard-content-grid">
 
 
-            <!-- RECENT MEMBERS -->
+            <!--
+            ==============================================================
+            RECENT MEMBERS
+            ==============================================================
+            -->
 
             <article class="dashboard-panel">
+
 
                 <div class="panel-header">
 
@@ -636,72 +895,101 @@ function adminEscape(string $value): string
 
                 <?php if ($recentMembers): ?>
 
+
                     <div class="admin-list">
 
-                        <?php
-                        foreach ($recentMembers as $recentMember):
-                        ?>
+
+                        <?php foreach (
+                            $recentMembers
+                            as $recentMember
+                        ): ?>
+
 
                             <div class="admin-list-row">
+
 
                                 <div>
 
                                     <strong>
+
                                         <?php
                                         echo adminEscape(
+                                            (string)
                                             $recentMember[
                                                 'first_name'
-                                            ]
-                                            . ' '
-                                            . $recentMember[
+                                            ] .
+                                            ' ' .
+                                            (string)
+                                            $recentMember[
                                                 'last_name'
                                             ]
                                         );
                                         ?>
+
                                     </strong>
 
+
                                     <span>
+
                                         <?php
                                         echo adminEscape(
+                                            (string)
                                             $recentMember[
                                                 'email'
                                             ]
                                         );
                                         ?>
+
                                     </span>
 
                                 </div>
 
+
                                 <small>
+
                                     <?php
                                     echo adminEscape(
+                                        (string)
                                         $recentMember[
                                             'registration_date'
                                         ]
                                     );
                                     ?>
+
                                 </small>
+
 
                             </div>
 
+
                         <?php endforeach; ?>
+
 
                     </div>
 
+
                 <?php else: ?>
+
 
                     <p class="empty-message">
                         No member registrations yet.
                     </p>
 
+
                 <?php endif; ?>
+
 
             </article>
 
 
-            <!-- RECENT PAYMENTS -->
+            <!--
+            ==============================================================
+            RECENT PAYMENTS
+            ==============================================================
+            -->
 
             <article class="dashboard-panel">
+
 
                 <div class="panel-header">
 
@@ -717,42 +1005,61 @@ function adminEscape(string $value): string
 
                     </div>
 
+
+                    <a
+                        href="../payment/index.php"
+                        class="panel-action-link"
+                    >
+                        View Payments
+                    </a>
+
                 </div>
 
 
                 <?php if ($recentPayments): ?>
 
+
                     <div class="admin-list">
 
-                        <?php
-                        foreach ($recentPayments as $payment):
-                        ?>
+
+                        <?php foreach (
+                            $recentPayments
+                            as $payment
+                        ): ?>
+
 
                             <div class="admin-list-row">
 
+
                                 <div>
+
 
                                     <strong>
 
                                         $<?php
                                         echo number_format(
                                             (float)
-                                            $payment['amount'],
+                                            $payment[
+                                                'amount'
+                                            ],
                                             2
                                         );
                                         ?>
 
                                     </strong>
 
+
                                     <span>
 
                                         <?php
                                         echo adminEscape(
+                                            (string)
                                             $payment[
                                                 'first_name'
-                                            ]
-                                            . ' '
-                                            . $payment[
+                                            ] .
+                                            ' ' .
+                                            (string)
+                                            $payment[
                                                 'last_name'
                                             ]
                                         );
@@ -760,39 +1067,120 @@ function adminEscape(string $value): string
 
                                     </span>
 
+
+                                    <?php if (
+                                        !empty(
+                                            $payment[
+                                                'transaction_reference'
+                                            ]
+                                        )
+                                    ): ?>
+
+                                        <small>
+
+                                            <?php
+                                            echo adminEscape(
+                                                (string)
+                                                $payment[
+                                                    'transaction_reference'
+                                                ]
+                                            );
+                                            ?>
+
+                                        </small>
+
+                                    <?php endif; ?>
+
+
                                 </div>
 
 
-                                <small>
+                                <div>
 
-                                    <?php
-                                    echo strtoupper(
-                                        adminEscape(
+
+                                    <small>
+
+                                        <?php
+                                        echo strtoupper(
+                                            adminEscape(
+                                                (string)
+                                                $payment[
+                                                    'payment_status'
+                                                ]
+                                            )
+                                        );
+                                        ?>
+
+                                    </small>
+
+
+                                    <?php if (
+                                        !empty(
                                             $payment[
-                                                'payment_status'
+                                                'payment_date'
                                             ]
                                         )
-                                    );
-                                    ?>
+                                    ): ?>
 
-                                </small>
+                                        <small>
+
+                                            <?php
+
+                                            $paymentTime =
+                                                strtotime(
+                                                    (string)
+                                                    $payment[
+                                                        'payment_date'
+                                                    ]
+                                                );
+
+                                            if (
+                                                $paymentTime !==
+                                                false
+                                            ) {
+
+                                                echo adminEscape(
+                                                    date(
+                                                        'd M Y',
+                                                        $paymentTime
+                                                    )
+                                                );
+                                            }
+
+                                            ?>
+
+                                        </small>
+
+                                    <?php endif; ?>
+
+
+                                </div>
+
 
                             </div>
 
+
                         <?php endforeach; ?>
+
 
                     </div>
 
 
                 <?php else: ?>
 
+
                     <p class="empty-message">
+
                         No payment transactions yet.
+
                     </p>
+
 
                 <?php endif; ?>
 
+
             </article>
+
 
         </section>
 
@@ -801,6 +1189,12 @@ function adminEscape(string $value): string
 
 </main>
 
+
+<!--
+==========================================================================
+FOOTER
+==========================================================================
+-->
 
 <footer>
 
@@ -817,6 +1211,7 @@ function adminEscape(string $value): string
             </p>
 
         </div>
+
 
         <p>
             Administration Portal
