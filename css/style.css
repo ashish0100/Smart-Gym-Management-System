@@ -5793,3 +5793,889 @@ RESPONSIVE
     }
 
 }
+/*
+==========================================================================
+SGMS-20 - REPORTING & ANALYTICS
+==========================================================================
+*/
+
+.reporting-page {
+    min-height: 100vh;
+}
+
+
+/* PRINT BUTTON */
+
+.report-print-button {
+    min-height: 44px;
+
+    padding:
+        10px
+        18px;
+
+    border:
+        1px solid
+        rgba(33, 212, 232, 0.4);
+
+    border-radius: 10px;
+
+    background: #22c7df;
+
+    color: #04131f;
+
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.report-print-button:hover {
+    filter: brightness(1.08);
+}
+
+
+/* METRICS */
+
+.report-metric-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap: 15px;
+}
+
+
+.report-metric-grid > div,
+.report-attendance-grid > div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+    padding: 20px;
+
+    border:
+        1px solid #263b55;
+
+    border-radius: 14px;
+
+    background: #0d2137;
+}
+
+
+.report-metric-grid span,
+.report-attendance-grid span {
+    color: #9fb0c6;
+}
+
+
+.report-metric-grid strong,
+.report-attendance-grid strong {
+    color: #22d3ee;
+
+    font-size: 1.7rem;
+}
+
+
+/* TWO COLUMN STATISTICS */
+
+.report-vertical-stats {
+    display: grid;
+
+    gap: 12px;
+}
+
+
+.report-vertical-stats > div {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding:
+        16px
+        18px;
+
+    border:
+        1px solid #263b55;
+
+    border-radius: 12px;
+
+    background: #0d2137;
+}
+
+
+.report-vertical-stats span {
+    color: #9fb0c6;
+}
+
+
+.report-vertical-stats strong {
+    color: #f5f8fc;
+
+    font-size: 1.25rem;
+}
+
+
+/* ATTENDANCE */
+
+.report-attendance-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap: 15px;
+}
+
+
+/* TABLES */
+
+.report-table-wrap {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+.report-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 760px;
+}
+
+
+.report-table th,
+.report-table td {
+    padding:
+        16px
+        14px;
+
+    text-align: left;
+
+    border-bottom:
+        1px solid #263b55;
+}
+
+
+.report-table th {
+    color: #8fa4bd;
+
+    font-size: 0.76rem;
+
+    letter-spacing: 0.07em;
+
+    text-transform: uppercase;
+}
+
+
+.report-table td {
+    color: #eaf0f7;
+}
+
+
+.report-table td strong {
+    color: #f7f9fc;
+}
+
+
+.report-table td small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #879cb5;
+}
+
+
+.report-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding:
+        6px
+        10px;
+
+    border:
+        1px solid
+        rgba(33, 212, 232, 0.35);
+
+    border-radius: 999px;
+
+    background:
+        rgba(33, 212, 232, 0.07);
+
+    color: #22d3ee;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+}
+
+
+/* RESPONSIVE */
+
+@media (
+    max-width: 1050px
+) {
+
+    .report-metric-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .report-attendance-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+@media (
+    max-width: 650px
+) {
+
+    .report-metric-grid,
+    .report-attendance-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* PRINT REPORT */
+
+@media print {
+
+    .dashboard-navbar,
+    .report-print-button,
+    footer {
+        display: none !important;
+    }
+
+
+    body,
+    .dashboard-main,
+    .dashboard-panel,
+    .summary-card {
+        background: white !important;
+
+        color: black !important;
+    }
+
+
+    .dashboard-main {
+        padding-top: 0;
+    }
+
+
+    .dashboard-panel,
+    .summary-card {
+        border:
+            1px solid #cccccc !important;
+
+        break-inside: avoid;
+    }
+
+
+    h1,
+    h2,
+    h3,
+    strong,
+    span,
+    p,
+    small,
+    td,
+    th {
+        color: black !important;
+    }
+
+}
+
+/*
+==========================================================================
+SGMS-19 - ADMINISTRATOR DASHBOARD IMPROVEMENTS
+==========================================================================
+*/
+
+.admin-improved-page {
+    min-height: 100vh;
+}
+
+
+/* OPERATIONAL STATISTICS */
+
+.admin-improved-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0 0 28px;
+}
+
+.admin-improved-stats > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    border: 1px solid #263b55;
+    border-radius: 14px;
+    background: #0d1d30;
+}
+
+.admin-improved-stats span {
+    color: #9fb0c6;
+    font-size: 0.86rem;
+}
+
+.admin-improved-stats strong {
+    color: #22d3ee;
+    font-size: 1.7rem;
+}
+
+.admin-improved-stats small {
+    color: #758ca7;
+}
+
+
+/* ATTENTION REQUIRED */
+
+.admin-improved-attention-panel {
+    margin-bottom: 28px;
+}
+
+.admin-improved-attention-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.admin-improved-attention-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 125px;
+    padding: 20px;
+    border: 1px solid #2b415d;
+    border-radius: 15px;
+    background: #0d2137;
+    color: inherit;
+    text-decoration: none;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.admin-improved-attention-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(33, 212, 232, 0.4);
+    background: rgba(33, 212, 232, 0.04);
+}
+
+.admin-improved-attention-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: rgba(33, 212, 232, 0.09);
+    font-size: 1.35rem;
+}
+
+.admin-improved-attention-card div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.admin-improved-attention-card strong {
+    color: #22d3ee;
+    font-size: 1.6rem;
+}
+
+.admin-improved-attention-card span {
+    color: #f5f8fc;
+    font-weight: 700;
+}
+
+.admin-improved-attention-card small {
+    color: #8fa4bd;
+}
+
+
+/* ADMIN MANAGEMENT */
+
+.admin-improved-static-card {
+    cursor: default;
+}
+
+.admin-improved-coming-card {
+    opacity: 0.7;
+    cursor: default;
+}
+
+
+/* ATTENDANCE SNAPSHOT */
+
+.admin-improved-attendance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.admin-improved-attendance-grid > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    border: 1px solid #263b55;
+    border-radius: 13px;
+    background: #0d2137;
+}
+
+.admin-improved-attendance-grid span {
+    color: #9fb0c6;
+}
+
+.admin-improved-attendance-grid strong {
+    color: #f5f8fc;
+    font-size: 1.7rem;
+}
+
+
+/* RECENT ACTIVITY */
+
+.admin-improved-row-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 7px;
+    text-align: right;
+}
+
+
+/* STATUS BADGES */
+
+.admin-improved-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 6px 10px;
+    border: 1px solid;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.admin-improved-status-completed,
+.admin-improved-attendance-present {
+    color: #4ade80;
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.35);
+}
+
+.admin-improved-status-pending,
+.admin-improved-attendance-late {
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+.admin-improved-status-failed,
+.admin-improved-status-cancelled,
+.admin-improved-attendance-absent {
+    color: #fb7185;
+    background: rgba(244, 63, 94, 0.08);
+    border-color: rgba(244, 63, 94, 0.35);
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .admin-improved-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-improved-attention-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+
+    .admin-improved-stats,
+    .admin-improved-attention-grid,
+    .admin-improved-attendance-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-improved-row-right {
+        align-items: flex-start;
+        text-align: left;
+    }
+}
+
+/*
+==========================================================================
+ADMIN DASHBOARD FINAL OVERRIDE
+SGMS-19 / SGMS-20
+==========================================================================
+*/
+
+.admin-improved-page {
+    min-height: 100vh !important;
+}
+
+
+/* ================================================================
+   OPERATIONAL STATISTICS
+================================================================ */
+
+.admin-improved-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    margin: 0 0 30px !important;
+    width: 100% !important;
+}
+
+.admin-improved-stats > div {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    gap: 8px !important;
+
+    min-height: 120px !important;
+
+    padding: 22px !important;
+
+    border: 1px solid #263b55 !important;
+    border-radius: 15px !important;
+
+    background: #12283f !important;
+}
+
+.admin-improved-stats > div > span {
+    display: block !important;
+
+    color: #9fb0c6 !important;
+
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+}
+
+.admin-improved-stats > div > strong {
+    display: block !important;
+
+    color: #22d3ee !important;
+
+    font-size: 1.7rem !important;
+    font-weight: 800 !important;
+}
+
+.admin-improved-stats > div > small {
+    display: block !important;
+
+    color: #8297af !important;
+
+    font-size: 0.8rem !important;
+}
+
+
+/* ================================================================
+   ATTENTION REQUIRED
+================================================================ */
+
+.admin-improved-attention-panel {
+    display: block !important;
+
+    margin-bottom: 30px !important;
+}
+
+.admin-improved-attention-grid {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr)) !important;
+
+    gap: 16px !important;
+
+    width: 100% !important;
+
+    margin-top: 20px !important;
+}
+
+.admin-improved-attention-card {
+    display: flex !important;
+
+    align-items: center !important;
+
+    gap: 16px !important;
+
+    min-height: 125px !important;
+
+    padding: 20px !important;
+
+    border: 1px solid #2a405a !important;
+    border-radius: 15px !important;
+
+    background: #0d2137 !important;
+
+    color: #ffffff !important;
+
+    text-decoration: none !important;
+
+    box-sizing: border-box !important;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease !important;
+}
+
+.admin-improved-attention-card:hover {
+    transform: translateY(-2px) !important;
+
+    border-color:
+        rgba(34, 211, 238, 0.45) !important;
+
+    background:
+        rgba(34, 211, 238, 0.07) !important;
+}
+
+.admin-improved-attention-icon {
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 48px !important;
+    height: 48px !important;
+
+    min-width: 48px !important;
+
+    border-radius: 12px !important;
+
+    background:
+        rgba(34, 211, 238, 0.10) !important;
+
+    font-size: 1.35rem !important;
+}
+
+.admin-improved-attention-card > div {
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    gap: 4px !important;
+}
+
+.admin-improved-attention-card > div > strong {
+    display: block !important;
+
+    color: #22d3ee !important;
+
+    font-size: 1.6rem !important;
+    font-weight: 800 !important;
+}
+
+.admin-improved-attention-card > div > span {
+    display: block !important;
+
+    color: #f5f8fc !important;
+
+    font-weight: 700 !important;
+}
+
+.admin-improved-attention-card > div > small {
+    display: block !important;
+
+    color: #91a5bc !important;
+}
+
+
+/* ================================================================
+   ATTENDANCE SNAPSHOT
+================================================================ */
+
+.admin-improved-attendance-grid {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr)) !important;
+
+    gap: 16px !important;
+
+    width: 100% !important;
+}
+
+.admin-improved-attendance-grid > div {
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    gap: 8px !important;
+
+    padding: 20px !important;
+
+    border: 1px solid #263b55 !important;
+    border-radius: 13px !important;
+
+    background: #0d2137 !important;
+}
+
+.admin-improved-attendance-grid > div > span {
+    color: #9fb0c6 !important;
+}
+
+.admin-improved-attendance-grid > div > strong {
+    color: #f5f8fc !important;
+
+    font-size: 1.7rem !important;
+}
+
+
+/* ================================================================
+   ACTIVITY
+================================================================ */
+
+.admin-improved-row-right {
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    align-items: flex-end !important;
+
+    gap: 7px !important;
+
+    text-align: right !important;
+}
+
+
+/* ================================================================
+   STATUS BADGES
+================================================================ */
+
+.admin-improved-status {
+    display: inline-flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: fit-content !important;
+
+    padding: 6px 10px !important;
+
+    border: 1px solid !important;
+    border-radius: 999px !important;
+
+    font-size: 0.7rem !important;
+
+    font-weight: 800 !important;
+
+    letter-spacing: 0.05em !important;
+}
+
+.admin-improved-status-completed,
+.admin-improved-attendance-present {
+    color: #4ade80 !important;
+
+    background:
+        rgba(34, 197, 94, 0.08) !important;
+
+    border-color:
+        rgba(34, 197, 94, 0.35) !important;
+}
+
+.admin-improved-status-pending,
+.admin-improved-attendance-late {
+    color: #fbbf24 !important;
+
+    background:
+        rgba(245, 158, 11, 0.08) !important;
+
+    border-color:
+        rgba(245, 158, 11, 0.35) !important;
+}
+
+.admin-improved-status-failed,
+.admin-improved-status-cancelled,
+.admin-improved-attendance-absent {
+    color: #fb7185 !important;
+
+    background:
+        rgba(244, 63, 94, 0.08) !important;
+
+    border-color:
+        rgba(244, 63, 94, 0.35) !important;
+}
+
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+
+@media (max-width: 1100px) {
+
+    .admin-improved-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    .admin-improved-attention-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .admin-improved-stats,
+    .admin-improved-attention-grid,
+    .admin-improved-attendance-grid {
+        grid-template-columns:
+            1fr !important;
+    }
+
+    .admin-improved-row-right {
+        align-items: flex-start !important;
+
+        text-align: left !important;
+    }
+
+}
