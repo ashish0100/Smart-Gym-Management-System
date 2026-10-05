@@ -451,11 +451,10 @@ function membershipStatusClass(?string $status): string
                     ?>.
                 </h1>
 
-                <p>
-                    Manage your membership,
-                    bookings, attendance and payments
-                    from one place.
-                </p>
+                <p class="dashboard-subtitle">
+    View your membership, classes and gym activities in one place.
+</p>
+            
 
             </div>
 

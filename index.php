@@ -21,6 +21,7 @@ session_start();
 
         <a href="index.php" class="logo">
             <span class="logo-icon">✚</span>
+
             <div>
                 <strong>World Fitness Australia</strong>
                 <small>Smart Gym Management</small>
@@ -48,6 +49,10 @@ session_start();
 
 
 <main>
+
+<!-- ==========================================
+     HERO SECTION
+     ========================================== -->
 
 <section class="hero" id="home">
 
@@ -83,6 +88,7 @@ session_start();
                 </a>
 
             </div>
+
 
             <div class="hero-stats">
 
@@ -148,6 +154,7 @@ session_start();
 
                 </div>
 
+
                 <div class="preview-actions">
 
                     <span>Book a Class</span>
@@ -163,6 +170,10 @@ session_start();
 
 </section>
 
+
+<!-- ==========================================
+     FEATURES SECTION
+     ========================================== -->
 
 <section class="features section" id="features">
 
@@ -189,50 +200,74 @@ session_start();
         <div class="feature-grid">
 
             <article class="feature-card">
-                <div class="feature-icon">👤</div>
 
-                <h3>Membership Management</h3>
+                <div class="feature-icon">
+                    👤
+                </div>
+
+                <h3>
+                    Membership Management
+                </h3>
 
                 <p>
                     View membership details, check expiry dates,
                     renew plans and manage membership status.
                 </p>
+
             </article>
 
 
             <article class="feature-card">
-                <div class="feature-icon">📅</div>
 
-                <h3>Class Booking</h3>
+                <div class="feature-icon">
+                    📅
+                </div>
+
+                <h3>
+                    Class Booking
+                </h3>
 
                 <p>
                     Find available gym classes, check session
                     information and book suitable training times.
                 </p>
+
             </article>
 
 
             <article class="feature-card">
-                <div class="feature-icon">💳</div>
 
-                <h3>Payments</h3>
+                <div class="feature-icon">
+                    💳
+                </div>
+
+                <h3>
+                    Payments
+                </h3>
 
                 <p>
                     Manage membership payments, visit packs
                     and access your digital transaction history.
                 </p>
+
             </article>
 
 
             <article class="feature-card">
-                <div class="feature-icon">📊</div>
 
-                <h3>Attendance Tracking</h3>
+                <div class="feature-icon">
+                    📊
+                </div>
+
+                <h3>
+                    Attendance Tracking
+                </h3>
 
                 <p>
                     Track gym visits and maintain an organised
                     history of your fitness activity.
                 </p>
+
             </article>
 
         </div>
@@ -241,6 +276,12 @@ session_start();
 
 </section>
 
+
+<!-- ==========================================
+     MEMBERSHIP SECTION
+     Frontend contribution:
+     Improved membership plan comparison UI
+     ========================================== -->
 
 <section class="membership section" id="membership">
 
@@ -253,29 +294,71 @@ session_start();
             </span>
 
             <h2>
-                Choose a plan that works for you
+                Choose the membership that fits your lifestyle
             </h2>
+
+            <p>
+                Flexible options designed for different fitness goals,
+                schedules and levels of commitment.
+            </p>
 
         </div>
 
 
         <div class="membership-grid">
 
+            <!-- WEEKLY PLAN -->
+
             <article class="plan-card">
 
-                <h3>Weekly</h3>
+                <div class="plan-header">
 
-                <p>
-                    Flexible short-term access to World Fitness.
+                    <span class="plan-label">
+                        FLEXIBLE
+                    </span>
+
+                    <h3>
+                        Weekly
+                    </h3>
+
+                </div>
+
+                <p class="plan-description">
+                    Ideal for short-term access or members who
+                    prefer maximum flexibility.
                 </p>
 
+
+                <ul class="plan-features">
+
+                    <li>
+                        ✓ Full gym access
+                    </li>
+
+                    <li>
+                        ✓ Class booking access
+                    </li>
+
+                    <li>
+                        ✓ Member dashboard
+                    </li>
+
+                    <li>
+                        ✓ Attendance tracking
+                    </li>
+
+                </ul>
+
+
                 <a href="auth/register.php"
-                   class="btn btn-outline">
-                    Get Started
+                   class="btn btn-outline plan-button">
+                    Choose Weekly
                 </a>
 
             </article>
 
+
+            <!-- MONTHLY PLAN -->
 
             <article class="plan-card featured">
 
@@ -283,31 +366,102 @@ session_start();
                     MOST POPULAR
                 </span>
 
-                <h3>Monthly</h3>
 
-                <p>
-                    Our balanced membership for regular gym users.
+                <div class="plan-header">
+
+                    <span class="plan-label">
+                        BEST VALUE
+                    </span>
+
+                    <h3>
+                        Monthly
+                    </h3>
+
+                </div>
+
+
+                <p class="plan-description">
+                    A balanced option for regular members who want
+                    consistent access without a long-term commitment.
                 </p>
 
+
+                <ul class="plan-features">
+
+                    <li>
+                        ✓ Full gym access
+                    </li>
+
+                    <li>
+                        ✓ Unlimited class booking
+                    </li>
+
+                    <li>
+                        ✓ Member dashboard
+                    </li>
+
+                    <li>
+                        ✓ Payment history
+                    </li>
+
+                </ul>
+
+
                 <a href="auth/register.php"
-                   class="btn">
-                    Join Now
+                   class="btn plan-button">
+                    Choose Monthly
                 </a>
 
             </article>
 
 
+            <!-- ANNUAL PLAN -->
+
             <article class="plan-card">
 
-                <h3>Annual</h3>
+                <div class="plan-header">
 
-                <p>
-                    Long-term access for committed members.
+                    <span class="plan-label">
+                        COMMITTED
+                    </span>
+
+                    <h3>
+                        Annual
+                    </h3>
+
+                </div>
+
+
+                <p class="plan-description">
+                    Designed for committed members who want
+                    long-term access and simple membership management.
                 </p>
 
+
+                <ul class="plan-features">
+
+                    <li>
+                        ✓ Full gym access
+                    </li>
+
+                    <li>
+                        ✓ Unlimited class booking
+                    </li>
+
+                    <li>
+                        ✓ Attendance history
+                    </li>
+
+                    <li>
+                        ✓ Long-term membership access
+                    </li>
+
+                </ul>
+
+
                 <a href="auth/register.php"
-                   class="btn btn-outline">
-                    Get Started
+                   class="btn btn-outline plan-button">
+                    Choose Annual
                 </a>
 
             </article>
@@ -318,6 +472,10 @@ session_start();
 
 </section>
 
+
+<!-- ==========================================
+     ABOUT SECTION
+     ========================================== -->
 
 <section class="about section" id="about">
 
@@ -336,6 +494,7 @@ session_start();
 
         </div>
 
+
         <p>
             The Smart Gym Management System replaces manual
             membership records, paper receipts and traditional
@@ -350,14 +509,26 @@ session_start();
 </main>
 
 
+<!-- ==========================================
+     FOOTER
+     ========================================== -->
+
 <footer>
 
     <div class="container footer-content">
 
         <div>
-            <strong>World Fitness Australia</strong>
-            <p>Smart Gym Management System</p>
+
+            <strong>
+                World Fitness Australia
+            </strong>
+
+            <p>
+                Smart Gym Management System
+            </p>
+
         </div>
+
 
         <p>
             ICT308 Project 2
@@ -369,4 +540,5 @@ session_start();
 
 
 </body>
+
 </html>
