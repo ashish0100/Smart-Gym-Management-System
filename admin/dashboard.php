@@ -6,10 +6,18 @@ session_start();
 
 require_once __DIR__ . '/../config/database.php';
 
+/*
+|--------------------------------------------------------------------------
+| Smart Gym Management System
+| SGMS-19 / SGMS-20
+| Improved Administrator Dashboard
+|--------------------------------------------------------------------------
+*/
+
 
 /*
 |--------------------------------------------------------------------------
-| Authentication Check
+| Authentication
 |--------------------------------------------------------------------------
 */
 
@@ -18,17 +26,19 @@ if (
     !isset($_SESSION['logged_in']) ||
     $_SESSION['logged_in'] !== true
 ) {
+
     $_SESSION['login_error'] =
         'Please log in to access the administration area.';
 
     header('Location: ../auth/login.php');
+
     exit;
 }
 
 
 /*
 |--------------------------------------------------------------------------
-| Admin Role Check
+| Administrator Role Protection
 |--------------------------------------------------------------------------
 */
 
@@ -36,180 +46,497 @@ if (
     !isset($_SESSION['role']) ||
     $_SESSION['role'] !== 'admin'
 ) {
+
     http_response_code(403);
 
-    exit('Access denied. Administrator access is required.');
+    exit(
+        'Access denied. Administrator access is required.'
+    );
+}
+
+
+$adminName =
+    (string) (
+        $_SESSION['first_name']
+        ?? 'Administrator'
+    );
+
+
+/*
+|--------------------------------------------------------------------------
+| Helpers
+|--------------------------------------------------------------------------
+*/
+
+function adminEscape(
+    ?string $value
+): string {
+
+    return htmlspecialchars(
+        $value ?? '',
+        ENT_QUOTES,
+        'UTF-8'
+    );
+}
+
+
+function adminDate(
+    ?string $value,
+    bool $withTime = false
+): string {
+
+    if (!$value) {
+        return 'Not available';
+    }
+
+
+    $timestamp =
+        strtotime($value);
+
+
+    if (
+        $timestamp === false
+    ) {
+
+        return adminEscape(
+            $value
+        );
+    }
+
+
+    return $withTime
+        ? date(
+            'd M Y, g:i A',
+            $timestamp
+        )
+        : date(
+            'd M Y',
+            $timestamp
+        );
 }
 
 
 /*
 |--------------------------------------------------------------------------
-| Current Admin
-|--------------------------------------------------------------------------
-*/
-
-$adminName =
-    $_SESSION['first_name'] ?? 'Administrator';
-
-
-/*
-|--------------------------------------------------------------------------
-| Load Dashboard Statistics
+| Dashboard Data
 |--------------------------------------------------------------------------
 */
 
 try {
 
-    // Total members
-    $totalMembers = (int) $pdo
-        ->query(
-            'SELECT COUNT(*)
-             FROM members'
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Members
+    |--------------------------------------------------------------------------
+    */
+
+    $totalMembers =
+        (int) $pdo
+            ->query(
+                'SELECT COUNT(*)
+                 FROM members'
+            )
+            ->fetchColumn();
 
 
-    // Total trainers
-    $totalTrainers = (int) $pdo
-        ->query(
-            'SELECT COUNT(*)
-             FROM trainers'
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Trainers
+    |--------------------------------------------------------------------------
+    */
+
+    $totalTrainers =
+        (int) $pdo
+            ->query(
+                'SELECT COUNT(*)
+                 FROM trainers'
+            )
+            ->fetchColumn();
 
 
-    // Active memberships
-    $activeMemberships = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM memberships
-             WHERE status = 'active'"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Memberships
+    |--------------------------------------------------------------------------
+    */
+
+    $activeMemberships =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM memberships
+                 WHERE status = 'active'"
+            )
+            ->fetchColumn();
 
 
-    // Pending memberships
-    $pendingMemberships = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM memberships
-             WHERE status = 'pending'"
-        )
-        ->fetchColumn();
+    $pendingMemberships =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM memberships
+                 WHERE status = 'pending'"
+            )
+            ->fetchColumn();
 
 
-    // Confirmed bookings
-    $confirmedBookings = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM bookings
-             WHERE status = 'confirmed'"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Bookings
+    |--------------------------------------------------------------------------
+    */
+
+    $confirmedBookings =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM bookings
+                 WHERE status = 'confirmed'"
+            )
+            ->fetchColumn();
 
 
-    // Upcoming classes
-    $upcomingClasses = (int) $pdo
-        ->query(
-            "SELECT COUNT(*)
-             FROM classes
-             WHERE class_date >= CURDATE()
-             AND status IN ('available', 'full')"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Upcoming Classes
+    |--------------------------------------------------------------------------
+    */
+
+    $upcomingClasses =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM classes
+                 WHERE class_date >= CURDATE()
+                 AND status IN (
+                    'available',
+                    'full'
+                 )"
+            )
+            ->fetchColumn();
 
 
-    // Completed revenue
-    $totalRevenue = (float) $pdo
-        ->query(
-            "SELECT COALESCE(SUM(amount), 0)
-             FROM payments
-             WHERE payment_status = 'completed'"
-        )
-        ->fetchColumn();
+    /*
+    |--------------------------------------------------------------------------
+    | Completed Revenue
+    |--------------------------------------------------------------------------
+    */
+
+    $totalRevenue =
+        (float) $pdo
+            ->query(
+                "SELECT
+                    COALESCE(
+                        SUM(amount),
+                        0
+                    )
+                 FROM payments
+                 WHERE payment_status = 'completed'"
+            )
+            ->fetchColumn();
 
 
-    // Recent members
-    $recentMemberStatement = $pdo->query(
-        'SELECT
-            u.first_name,
-            u.last_name,
-            u.email,
-            m.registration_date
+    /*
+    |--------------------------------------------------------------------------
+    | Pending Payments
+    |--------------------------------------------------------------------------
+    */
 
-         FROM members m
+    $pendingPayments =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM payments
+                 WHERE payment_status = 'pending'"
+            )
+            ->fetchColumn();
 
-         INNER JOIN users u
-            ON m.user_id = u.user_id
 
-         ORDER BY m.member_id DESC
+    /*
+    |--------------------------------------------------------------------------
+    | Attendance
+    |--------------------------------------------------------------------------
+    */
 
-         LIMIT 5'
-    );
+    $attendanceStatement =
+        $pdo->query(
+            "SELECT
+
+                COUNT(*) AS total,
+
+                SUM(
+                    CASE
+                        WHEN status = 'present'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS present_count,
+
+                SUM(
+                    CASE
+                        WHEN status = 'late'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS late_count,
+
+                SUM(
+                    CASE
+                        WHEN status = 'absent'
+                        THEN 1
+                        ELSE 0
+                    END
+                ) AS absent_count
+
+             FROM attendance"
+        );
+
+
+    $attendanceStats =
+        $attendanceStatement->fetch(
+            PDO::FETCH_ASSOC
+        );
+
+
+    $totalAttendance =
+        (int) (
+            $attendanceStats['total']
+            ?? 0
+        );
+
+
+    $presentAttendance =
+        (int) (
+            $attendanceStats['present_count']
+            ?? 0
+        );
+
+
+    $lateAttendance =
+        (int) (
+            $attendanceStats['late_count']
+            ?? 0
+        );
+
+
+    $absentAttendance =
+        (int) (
+            $attendanceStats['absent_count']
+            ?? 0
+        );
+
+
+    $attendanceRate =
+        $totalAttendance > 0
+
+            ? round(
+                (
+                    (
+                        $presentAttendance +
+                        $lateAttendance
+                    )
+                    /
+                    $totalAttendance
+                )
+                * 100
+            )
+
+            : 0;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notifications
+    |--------------------------------------------------------------------------
+    */
+
+    $unreadNotifications =
+        (int) $pdo
+            ->query(
+                "SELECT COUNT(*)
+                 FROM notifications
+                 WHERE is_read = 0"
+            )
+            ->fetchColumn();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Recent Members
+    |--------------------------------------------------------------------------
+    */
+
+    $recentMemberStatement =
+        $pdo->query(
+            'SELECT
+
+                u.first_name,
+                u.last_name,
+                u.email,
+                m.registration_date
+
+             FROM members m
+
+             INNER JOIN users u
+                ON m.user_id = u.user_id
+
+             ORDER BY
+                m.member_id DESC
+
+             LIMIT 5'
+        );
+
 
     $recentMembers =
-        $recentMemberStatement->fetchAll();
+        $recentMemberStatement->fetchAll(
+            PDO::FETCH_ASSOC
+        );
 
 
-    // Recent payments
-    $recentPaymentStatement = $pdo->query(
-        'SELECT
-            p.amount,
-            p.payment_status,
-            p.payment_date,
-            p.transaction_reference,
-            u.first_name,
-            u.last_name
+    /*
+    |--------------------------------------------------------------------------
+    | Recent Payments
+    |--------------------------------------------------------------------------
+    */
 
-         FROM payments p
+    $recentPaymentStatement =
+        $pdo->query(
+            'SELECT
 
-         INNER JOIN members m
-            ON p.member_id = m.member_id
+                p.payment_id,
+                p.amount,
+                p.payment_method,
+                p.payment_status,
+                p.payment_date,
+                p.transaction_reference,
 
-         INNER JOIN users u
-            ON m.user_id = u.user_id
+                u.first_name,
+                u.last_name
 
-         ORDER BY p.payment_id DESC
+             FROM payments p
 
-         LIMIT 5'
-    );
+             INNER JOIN members m
+                ON p.member_id = m.member_id
+
+             INNER JOIN users u
+                ON m.user_id = u.user_id
+
+             ORDER BY
+                p.payment_id DESC
+
+             LIMIT 5'
+        );
+
 
     $recentPayments =
-        $recentPaymentStatement->fetchAll();
+        $recentPaymentStatement->fetchAll(
+            PDO::FETCH_ASSOC
+        );
 
 
-} catch (PDOException $exception) {
+    /*
+    |--------------------------------------------------------------------------
+    | Recent Notifications
+    |--------------------------------------------------------------------------
+    */
+
+    $recentNotificationStatement =
+        $pdo->query(
+            'SELECT
+
+                n.notification_id,
+                n.title,
+                n.notification_type,
+                n.is_read,
+                n.created_at,
+
+                u.first_name,
+                u.last_name
+
+             FROM notifications n
+
+             INNER JOIN users u
+                ON n.user_id = u.user_id
+
+             ORDER BY
+                n.notification_id DESC
+
+             LIMIT 5'
+        );
+
+
+    $recentNotifications =
+        $recentNotificationStatement->fetchAll(
+            PDO::FETCH_ASSOC
+        );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Recent Attendance
+    |--------------------------------------------------------------------------
+    */
+
+    $recentAttendanceStatement =
+        $pdo->query(
+            "SELECT
+
+                a.attendance_id,
+                a.attendance_date,
+                a.check_in_time,
+                a.status,
+
+                COALESCE(
+                    c.class_name,
+                    'General Gym Visit'
+                ) AS class_name,
+
+                u.first_name,
+                u.last_name
+
+             FROM attendance a
+
+             INNER JOIN members m
+                ON a.member_id = m.member_id
+
+             INNER JOIN users u
+                ON m.user_id = u.user_id
+
+             LEFT JOIN classes c
+                ON a.class_id = c.class_id
+
+             ORDER BY
+                a.attendance_id DESC
+
+             LIMIT 5"
+        );
+
+
+    $recentAttendance =
+        $recentAttendanceStatement->fetchAll(
+            PDO::FETCH_ASSOC
+        );
+
+
+} catch (
+    PDOException $exception
+) {
 
     error_log(
         'Admin dashboard error: ' .
         $exception->getMessage()
     );
 
+
     http_response_code(500);
+
 
     exit(
         'Unable to load the administrator dashboard.'
     );
 }
 
-
-/*
-|--------------------------------------------------------------------------
-| Helper
-|--------------------------------------------------------------------------
-*/
-
-function adminEscape(string $value): string
-{
-    return htmlspecialchars(
-        $value,
-        ENT_QUOTES,
-        'UTF-8'
-    );
-}
-
 ?>
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -229,18 +556,34 @@ function adminEscape(string $value): string
 
     <link
         rel="stylesheet"
-        href="../css/style.css"
+        href="../css/style.css?v=14"
     >
 
 </head>
 
 
-<body class="dashboard-page">
+<body
+    class="
+        dashboard-page
+        admin-improved-page
+    "
+>
 
+
+<!--
+==========================================================================
+NAVIGATION
+==========================================================================
+-->
 
 <header class="dashboard-navbar">
 
-    <div class="container dashboard-nav-container">
+    <div
+        class="
+            container
+            dashboard-nav-container
+        "
+    >
 
         <a
             href="dashboard.php"
@@ -259,40 +602,40 @@ function adminEscape(string $value): string
                         y="24"
                         width="8"
                         height="16"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="16"
                         y="20"
                         width="7"
                         height="24"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="41"
                         y="20"
                         width="7"
                         height="24"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="49"
                         y="24"
                         width="8"
                         height="16"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                     <rect
                         x="22"
                         y="29"
                         width="20"
                         height="6"
-                        rx="2">
-                    </rect>
+                        rx="2"
+                    ></rect>
 
                 </svg>
 
@@ -323,9 +666,13 @@ function adminEscape(string $value): string
                 </span>
 
                 <strong>
-                    <?php
-                    echo adminEscape($adminName);
+
+                    <?=
+                        adminEscape(
+                            $adminName
+                        )
                     ?>
+
                 </strong>
 
             </div>
@@ -350,164 +697,868 @@ function adminEscape(string $value): string
 </header>
 
 
+<!--
+==========================================================================
+MAIN
+==========================================================================
+-->
+
 <main class="dashboard-main">
 
-    <div class="container">
+<div class="container">
 
 
-        <!-- WELCOME -->
+    <!--
+    ======================================================================
+    HERO
+    ======================================================================
+    -->
 
-        <section class="dashboard-welcome">
+    <section class="dashboard-welcome">
+
+        <div>
+
+            <span class="eyebrow">
+                ADMIN DASHBOARD
+            </span>
+
+            <h1>
+                Gym overview.
+            </h1>
+
+            <p>
+                Monitor memberships, classes,
+                bookings, attendance, payments and
+                communication across World Fitness Australia.
+            </p>
+
+        </div>
+
+
+        <span
+            class="
+                membership-status
+                status-active
+            "
+        >
+            SYSTEM ONLINE
+        </span>
+
+    </section>
+
+
+    <!--
+    ======================================================================
+    PRIMARY SUMMARY
+    ======================================================================
+    -->
+
+    <section class="dashboard-summary">
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Total Members
+            </span>
+
+            <strong>
+                <?= $totalMembers ?>
+            </strong>
+
+            <small>
+                Registered gym members
+            </small>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Active Memberships
+            </span>
+
+            <strong>
+                <?= $activeMemberships ?>
+            </strong>
+
+            <small>
+                Currently active plans
+            </small>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Confirmed Bookings
+            </span>
+
+            <strong>
+                <?= $confirmedBookings ?>
+            </strong>
+
+            <small>
+                Current class bookings
+            </small>
+
+        </article>
+
+
+        <article class="summary-card">
+
+            <span class="summary-label">
+                Completed Revenue
+            </span>
+
+            <strong>
+
+                $<?=
+                    number_format(
+                        $totalRevenue,
+                        2
+                    )
+                ?>
+
+            </strong>
+
+            <small>
+                Recorded completed payments
+            </small>
+
+        </article>
+
+
+    </section>
+
+
+    <!--
+    ======================================================================
+    OPERATIONAL STATISTICS
+    ======================================================================
+    -->
+
+    <section class="admin-improved-stats">
+
+
+        <div>
+
+            <span>
+                Trainers
+            </span>
+
+            <strong>
+                <?= $totalTrainers ?>
+            </strong>
+
+            <small>
+                Registered trainers
+            </small>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Upcoming Classes
+            </span>
+
+            <strong>
+                <?= $upcomingClasses ?>
+            </strong>
+
+            <small>
+                Future sessions
+            </small>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Attendance Records
+            </span>
+
+            <strong>
+                <?= $totalAttendance ?>
+            </strong>
+
+            <small>
+                Recorded check-ins
+            </small>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Attendance Rate
+            </span>
+
+            <strong>
+                <?= $attendanceRate ?>%
+            </strong>
+
+            <small>
+                Present and late
+            </small>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Pending Memberships
+            </span>
+
+            <strong>
+                <?= $pendingMemberships ?>
+            </strong>
+
+            <small>
+                Awaiting activation
+            </small>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Unread Notifications
+            </span>
+
+            <strong>
+                <?= $unreadNotifications ?>
+            </strong>
+
+            <small>
+                User messages unread
+            </small>
+
+        </div>
+
+
+    </section>
+
+
+    <!--
+    ======================================================================
+    ATTENTION REQUIRED
+    ======================================================================
+    -->
+
+    <section
+        class="
+            dashboard-panel
+            admin-improved-attention-panel
+        "
+    >
+
+        <div class="panel-header">
 
             <div>
 
                 <span class="eyebrow">
-                    ADMIN DASHBOARD
+                    OPERATIONS
                 </span>
 
-                <h1>
-                    Gym overview.
-                </h1>
-
-                <p>
-                    Monitor members, memberships,
-                    bookings, trainers and payments
-                    across World Fitness Australia.
-                </p>
+                <h2>
+                    Attention Required
+                </h2>
 
             </div>
 
+        </div>
 
-            <span
-                class="membership-status status-active"
+
+        <div class="admin-improved-attention-grid">
+
+
+            <!-- PENDING MEMBERSHIPS -->
+
+            <a
+                href="../membership/index.php"
+                class="
+                    admin-improved-attention-card
+                "
             >
-                SYSTEM ONLINE
-            </span>
 
-        </section>
-
-
-        <!-- SUMMARY -->
-
-        <section class="dashboard-summary">
-
-            <article class="summary-card">
-
-                <span class="summary-label">
-                    Total Members
+                <span
+                    class="
+                        admin-improved-attention-icon
+                    "
+                >
+                    🎫
                 </span>
 
-                <strong>
-                    <?php echo $totalMembers; ?>
-                </strong>
+                <div>
 
-                <small>
-                    Registered gym members
-                </small>
+                    <strong>
+                        <?= $pendingMemberships ?>
+                    </strong>
 
-            </article>
+                    <span>
+                        Pending Memberships
+                    </span>
+
+                    <small>
+                        Review and activate plans
+                    </small>
+
+                </div>
+
+            </a>
 
 
-            <article class="summary-card">
+            <!-- PENDING PAYMENTS -->
 
-                <span class="summary-label">
-                    Active Memberships
+            <a
+                href="../payment/index.php"
+                class="
+                    admin-improved-attention-card
+                "
+            >
+
+                <span
+                    class="
+                        admin-improved-attention-icon
+                    "
+                >
+                    💳
                 </span>
 
-                <strong>
-                    <?php echo $activeMemberships; ?>
-                </strong>
+                <div>
 
-                <small>
-                    Currently active plans
-                </small>
+                    <strong>
+                        <?= $pendingPayments ?>
+                    </strong>
 
-            </article>
+                    <span>
+                        Pending Payments
+                    </span>
+
+                    <small>
+                        Review payment status
+                    </small>
+
+                </div>
+
+            </a>
 
 
-            <article class="summary-card">
+            <!-- NOTIFICATIONS -->
 
-                <span class="summary-label">
-                    Confirmed Bookings
+            <a
+                href="../notifications/index.php"
+                class="
+                    admin-improved-attention-card
+                "
+            >
+
+                <span
+                    class="
+                        admin-improved-attention-icon
+                    "
+                >
+                    🔔
                 </span>
 
-                <strong>
-                    <?php echo $confirmedBookings; ?>
-                </strong>
+                <div>
 
-                <small>
-                    Current class bookings
-                </small>
+                    <strong>
+                        <?= $unreadNotifications ?>
+                    </strong>
 
-            </article>
+                    <span>
+                        Unread Notifications
+                    </span>
+
+                    <small>
+                        Review communication activity
+                    </small>
+
+                </div>
+
+            </a>
 
 
-            <article class="summary-card">
+            <!-- UPCOMING CLASSES -->
 
-                <span class="summary-label">
-                    Completed Revenue
+            <a
+                href="classes.php"
+                class="
+                    admin-improved-attention-card
+                "
+            >
+
+                <span
+                    class="
+                        admin-improved-attention-icon
+                    "
+                >
+                    📅
                 </span>
 
-                <strong>
-                    $<?php
-                    echo number_format(
-                        $totalRevenue,
-                        2
-                    );
-                    ?>
-                </strong>
+                <div>
 
-                <small>
-                    Recorded completed payments
-                </small>
+                    <strong>
+                        <?= $upcomingClasses ?>
+                    </strong>
 
-            </article>
+                    <span>
+                        Upcoming Classes
+                    </span>
 
-        </section>
+                    <small>
+                        Review future gym sessions
+                    </small>
+
+                </div>
+
+            </a>
 
 
-        <!-- SECOND SUMMARY -->
+        </div>
 
-        <section class="admin-mini-summary">
+    </section>
+
+
+    <!--
+    ======================================================================
+    ADMINISTRATION AREAS
+    ======================================================================
+    -->
+
+    <section
+        class="
+            dashboard-panel
+            admin-management-panel
+        "
+    >
+
+        <div class="panel-header">
 
             <div>
-                <span>Trainers</span>
-                <strong>
-                    <?php echo $totalTrainers; ?>
-                </strong>
+
+                <span class="eyebrow">
+                    MANAGEMENT
+                </span>
+
+                <h2>
+                    Administration Areas
+                </h2>
+
             </div>
+
+        </div>
+
+
+        <div class="admin-management-grid">
+
+
+            <!--
+            ==============================================================
+            MEMBER MANAGEMENT
+            ==============================================================
+            -->
+
+            <div
+                class="
+                    admin-management-card
+                    admin-improved-static-card
+                "
+            >
+
+                <span class="quick-icon">
+                    👥
+                </span>
+
+                <div>
+
+                    <strong>
+                        Member Management
+                    </strong>
+
+                    <small>
+
+                        <?= $totalMembers ?>
+
+                        registered members
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!--
+            ==============================================================
+            TRAINER MANAGEMENT
+            ==============================================================
+            -->
+
+            <div
+                class="
+                    admin-management-card
+                    admin-improved-static-card
+                "
+            >
+
+                <span class="quick-icon">
+                    🏋️
+                </span>
+
+                <div>
+
+                    <strong>
+                        Trainer Management
+                    </strong>
+
+                    <small>
+
+                        <?= $totalTrainers ?>
+
+                        registered trainers
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!--
+            ==============================================================
+            CLASS MANAGEMENT
+            ==============================================================
+            -->
+
+            <a
+                href="classes.php"
+                class="
+                    admin-management-card
+                    admin-management-link
+                "
+            >
+
+                <span class="quick-icon">
+                    📅
+                </span>
+
+                <div>
+
+                    <strong>
+                        Class Management
+                    </strong>
+
+                    <small>
+                        Create and manage gym sessions
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <!--
+            ==============================================================
+            MEMBERSHIP MANAGEMENT
+            ==============================================================
+            -->
+
+            <a
+                href="../membership/index.php"
+                class="
+                    admin-management-card
+                    admin-management-link
+                "
+            >
+
+                <span class="quick-icon">
+                    🎫
+                </span>
+
+                <div>
+
+                    <strong>
+                        Membership Management
+                    </strong>
+
+                    <small>
+                        Activate, renew and manage plans
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <!--
+            ==============================================================
+            PAYMENT MANAGEMENT
+            ==============================================================
+            -->
+
+            <a
+                href="../payment/index.php"
+                class="
+                    admin-management-card
+                    admin-management-link
+                "
+            >
+
+                <span class="quick-icon">
+                    💳
+                </span>
+
+                <div>
+
+                    <strong>
+                        Payment Management
+                    </strong>
+
+                    <small>
+                        Record and review member payments
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <!--
+            ==============================================================
+            ATTENDANCE MANAGEMENT
+            ==============================================================
+            -->
+
+            <a
+                href="../attendance/index.php"
+                class="
+                    admin-management-card
+                    admin-management-link
+                "
+            >
+
+                <span class="quick-icon">
+                    ✅
+                </span>
+
+                <div>
+
+                    <strong>
+                        Attendance Management
+                    </strong>
+
+                    <small>
+                        Review gym and class attendance
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <!--
+            ==============================================================
+            NOTIFICATIONS
+            ==============================================================
+            -->
+
+            <a
+                href="../notifications/index.php"
+                class="
+                    admin-management-card
+                    admin-management-link
+                "
+            >
+
+                <span class="quick-icon">
+                    🔔
+                </span>
+
+                <div>
+
+                    <strong>
+                        Notifications
+                    </strong>
+
+                    <small>
+                        Send and manage user communication
+                    </small>
+
+                </div>
+
+            </a>
+
+
+            <!--
+            ==============================================================
+            REPORTING & ANALYTICS
+            SGMS-20
+            ==============================================================
+            -->
+
+            <a
+                href="reports.php"
+                class="
+                    admin-management-card
+                    admin-management-link
+                "
+            >
+
+                <span class="quick-icon">
+                    📊
+                </span>
+
+                <div>
+
+                    <strong>
+                        Reporting & Analytics
+                    </strong>
+
+                    <small>
+                        View gym performance and reports
+                    </small>
+
+                </div>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+    <!--
+    ======================================================================
+    ATTENDANCE SNAPSHOT
+    ======================================================================
+    -->
+
+    <section class="dashboard-panel">
+
+        <div class="panel-header">
 
             <div>
-                <span>Pending Memberships</span>
-                <strong>
-                    <?php echo $pendingMemberships; ?>
-                </strong>
+
+                <span class="eyebrow">
+                    ATTENDANCE
+                </span>
+
+                <h2>
+                    Attendance Snapshot
+                </h2>
+
             </div>
+
+
+            <a
+                href="../attendance/index.php"
+                class="panel-action-link"
+            >
+                View Attendance
+            </a>
+
+        </div>
+
+
+        <div
+            class="
+                admin-improved-attendance-grid
+            "
+        >
+
 
             <div>
-                <span>Upcoming Classes</span>
+
+                <span>
+                    Present
+                </span>
+
                 <strong>
-                    <?php echo $upcomingClasses; ?>
+                    <?= $presentAttendance ?>
                 </strong>
+
             </div>
 
-        </section>
+
+            <div>
+
+                <span>
+                    Late
+                </span>
+
+                <strong>
+                    <?= $lateAttendance ?>
+                </strong>
+
+            </div>
 
 
-        <!-- MANAGEMENT AREAS -->
+            <div>
 
-        <section class="dashboard-panel admin-management-panel">
+                <span>
+                    Absent
+                </span>
+
+                <strong>
+                    <?= $absentAttendance ?>
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Attendance Rate
+                </span>
+
+                <strong>
+                    <?= $attendanceRate ?>%
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!--
+    ======================================================================
+    RECENT MEMBERS AND PAYMENTS
+    ======================================================================
+    -->
+
+    <section class="dashboard-content-grid">
+
+
+        <!-- RECENT MEMBERS -->
+
+        <article class="dashboard-panel">
 
             <div class="panel-header">
 
                 <div>
 
                     <span class="eyebrow">
-                        MANAGEMENT
+                        MEMBERS
                     </span>
 
                     <h2>
-                        Administration Areas
+                        Recent Registrations
                     </h2>
 
                 </div>
@@ -515,335 +1566,610 @@ function adminEscape(string $value): string
             </div>
 
 
-            <div class="admin-management-grid">
+            <?php if ($recentMembers): ?>
 
-                <div class="admin-management-card">
 
-                    <span class="quick-icon">
-                        👥
-                    </span>
+                <div class="admin-list">
 
-                    <div>
 
-                        <strong>
-                            Member Management
-                        </strong>
+                    <?php foreach (
+                        $recentMembers
+                        as $recentMember
+                    ): ?>
 
-                        <small>
-                            View and manage registered members
-                        </small>
 
-                    </div>
+                        <div class="admin-list-row">
 
-                </div>
 
+                            <div>
 
-                <div class="admin-management-card">
+                                <strong>
 
-                    <span class="quick-icon">
-                        🏋️
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Trainer Management
-                        </strong>
-
-                        <small>
-                            Manage trainers and staff
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="admin-management-card">
-
-                    <span class="quick-icon">
-                        📅
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Class Management
-                        </strong>
-
-                        <small>
-                            Create and manage gym sessions
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="admin-management-card">
-
-                    <span class="quick-icon">
-                        💳
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Payment Management
-                        </strong>
-
-                        <small>
-                            Review member payments
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="admin-management-card">
-
-                    <span class="quick-icon">
-                        📊
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Reports
-                        </strong>
-
-                        <small>
-                            Review gym performance data
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="admin-management-card">
-
-                    <span class="quick-icon">
-                        🔔
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Notifications
-                        </strong>
-
-                        <small>
-                            Manage member communication
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- RECENT ACTIVITY -->
-
-        <section class="dashboard-content-grid">
-
-
-            <!-- RECENT MEMBERS -->
-
-            <article class="dashboard-panel">
-
-                <div class="panel-header">
-
-                    <div>
-
-                        <span class="eyebrow">
-                            MEMBERS
-                        </span>
-
-                        <h2>
-                            Recent Registrations
-                        </h2>
-
-                    </div>
-
-                </div>
-
-
-                <?php if ($recentMembers): ?>
-
-                    <div class="admin-list">
-
-                        <?php
-                        foreach ($recentMembers as $recentMember):
-                        ?>
-
-                            <div class="admin-list-row">
-
-                                <div>
-
-                                    <strong>
-                                        <?php
-                                        echo adminEscape(
+                                    <?=
+                                        adminEscape(
                                             $recentMember[
                                                 'first_name'
-                                            ]
-                                            . ' '
-                                            . $recentMember[
+                                            ] .
+                                            ' ' .
+                                            $recentMember[
                                                 'last_name'
                                             ]
-                                        );
-                                        ?>
-                                    </strong>
+                                        )
+                                    ?>
 
-                                    <span>
-                                        <?php
-                                        echo adminEscape(
+                                </strong>
+
+
+                                <span>
+
+                                    <?=
+                                        adminEscape(
                                             $recentMember[
                                                 'email'
                                             ]
-                                        );
-                                        ?>
-                                    </span>
-
-                                </div>
-
-                                <small>
-                                    <?php
-                                    echo adminEscape(
-                                        $recentMember[
-                                            'registration_date'
-                                        ]
-                                    );
+                                        )
                                     ?>
-                                </small>
+
+                                </span>
 
                             </div>
 
-                        <?php endforeach; ?>
 
-                    </div>
+                            <small>
 
-                <?php else: ?>
+                                <?=
+                                    adminDate(
+                                        $recentMember[
+                                            'registration_date'
+                                        ]
+                                    )
+                                ?>
 
-                    <p class="empty-message">
-                        No member registrations yet.
-                    </p>
-
-                <?php endif; ?>
-
-            </article>
+                            </small>
 
 
-            <!-- RECENT PAYMENTS -->
+                        </div>
 
-            <article class="dashboard-panel">
 
-                <div class="panel-header">
+                    <?php endforeach; ?>
 
-                    <div>
-
-                        <span class="eyebrow">
-                            PAYMENTS
-                        </span>
-
-                        <h2>
-                            Recent Transactions
-                        </h2>
-
-                    </div>
 
                 </div>
 
 
-                <?php if ($recentPayments): ?>
+            <?php else: ?>
 
-                    <div class="admin-list">
 
-                        <?php
-                        foreach ($recentPayments as $payment):
-                        ?>
+                <p class="empty-message">
+                    No member registrations yet.
+                </p>
 
-                            <div class="admin-list-row">
 
-                                <div>
+            <?php endif; ?>
 
-                                    <strong>
 
-                                        $<?php
-                                        echo number_format(
+        </article>
+
+
+        <!-- RECENT PAYMENTS -->
+
+        <article class="dashboard-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        PAYMENTS
+                    </span>
+
+                    <h2>
+                        Recent Transactions
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="../payment/index.php"
+                    class="panel-action-link"
+                >
+                    View Payments
+                </a>
+
+            </div>
+
+
+            <?php if ($recentPayments): ?>
+
+
+                <div class="admin-list">
+
+
+                    <?php foreach (
+                        $recentPayments
+                        as $payment
+                    ): ?>
+
+
+                        <div class="admin-list-row">
+
+
+                            <div>
+
+                                <strong>
+
+                                    $<?=
+                                        number_format(
                                             (float)
-                                            $payment['amount'],
+                                            $payment[
+                                                'amount'
+                                            ],
                                             2
-                                        );
-                                        ?>
+                                        )
+                                    ?>
 
-                                    </strong>
+                                </strong>
 
-                                    <span>
 
-                                        <?php
-                                        echo adminEscape(
+                                <span>
+
+                                    <?=
+                                        adminEscape(
                                             $payment[
                                                 'first_name'
-                                            ]
-                                            . ' '
-                                            . $payment[
+                                            ] .
+                                            ' ' .
+                                            $payment[
                                                 'last_name'
                                             ]
-                                        );
-                                        ?>
+                                        )
+                                    ?>
 
-                                    </span>
-
-                                </div>
+                                </span>
 
 
                                 <small>
 
-                                    <?php
-                                    echo strtoupper(
+                                    <?=
                                         adminEscape(
-                                            $payment[
-                                                'payment_status'
-                                            ]
+                                            ucfirst(
+                                                (string)
+                                                $payment[
+                                                    'payment_method'
+                                                ]
+                                            )
                                         )
-                                    );
                                     ?>
 
                                 </small>
 
                             </div>
 
-                        <?php endforeach; ?>
 
-                    </div>
+                            <div
+                                class="
+                                    admin-improved-row-right
+                                "
+                            >
+
+                                <span
+                                    class="
+                                        admin-improved-status
+                                        admin-improved-status-<?=
+                                            adminEscape(
+                                                strtolower(
+                                                    (string)
+                                                    $payment[
+                                                        'payment_status'
+                                                    ]
+                                                )
+                                            )
+                                        ?>
+                                    "
+                                >
+
+                                    <?=
+                                        adminEscape(
+                                            strtoupper(
+                                                (string)
+                                                $payment[
+                                                    'payment_status'
+                                                ]
+                                            )
+                                        )
+                                    ?>
+
+                                </span>
 
 
-                <?php else: ?>
+                                <small>
 
-                    <p class="empty-message">
-                        No payment transactions yet.
-                    </p>
+                                    <?=
+                                        adminDate(
+                                            $payment[
+                                                'payment_date'
+                                            ]
+                                        )
+                                    ?>
 
-                <?php endif; ?>
+                                </small>
 
-            </article>
-
-        </section>
+                            </div>
 
 
-    </div>
+                        </div>
+
+
+                    <?php endforeach; ?>
+
+
+                </div>
+
+
+            <?php else: ?>
+
+
+                <p class="empty-message">
+                    No payment transactions yet.
+                </p>
+
+
+            <?php endif; ?>
+
+
+        </article>
+
+
+    </section>
+
+
+    <!--
+    ======================================================================
+    NOTIFICATIONS AND ATTENDANCE ACTIVITY
+    ======================================================================
+    -->
+
+    <section class="dashboard-content-grid">
+
+
+        <!-- RECENT NOTIFICATIONS -->
+
+        <article class="dashboard-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        NOTIFICATIONS
+                    </span>
+
+                    <h2>
+                        Recent Communication
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="../notifications/index.php"
+                    class="panel-action-link"
+                >
+                    View Notifications
+                </a>
+
+            </div>
+
+
+            <?php if ($recentNotifications): ?>
+
+
+                <div class="admin-list">
+
+
+                    <?php foreach (
+                        $recentNotifications
+                        as $notification
+                    ): ?>
+
+
+                        <div class="admin-list-row">
+
+
+                            <div>
+
+                                <strong>
+
+                                    <?=
+                                        adminEscape(
+                                            $notification[
+                                                'title'
+                                            ]
+                                        )
+                                    ?>
+
+                                </strong>
+
+
+                                <span>
+
+                                    To:
+
+                                    <?=
+                                        adminEscape(
+                                            $notification[
+                                                'first_name'
+                                            ] .
+                                            ' ' .
+                                            $notification[
+                                                'last_name'
+                                            ]
+                                        )
+                                    ?>
+
+                                </span>
+
+
+                                <small>
+
+                                    <?=
+                                        adminEscape(
+                                            ucfirst(
+                                                $notification[
+                                                    'notification_type'
+                                                ]
+                                            )
+                                        )
+                                    ?>
+
+                                </small>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    admin-improved-row-right
+                                "
+                            >
+
+                                <span
+                                    class="
+                                        admin-improved-status
+                                        <?=
+                                            (int)
+                                            $notification[
+                                                'is_read'
+                                            ] === 1
+
+                                                ? 'admin-improved-status-completed'
+
+                                                : 'admin-improved-status-pending'
+                                        ?>
+                                    "
+                                >
+
+                                    <?=
+                                        (int)
+                                        $notification[
+                                            'is_read'
+                                        ] === 1
+
+                                            ? 'READ'
+
+                                            : 'UNREAD'
+                                    ?>
+
+                                </span>
+
+
+                                <small>
+
+                                    <?=
+                                        adminDate(
+                                            $notification[
+                                                'created_at'
+                                            ],
+                                            true
+                                        )
+                                    ?>
+
+                                </small>
+
+                            </div>
+
+
+                        </div>
+
+
+                    <?php endforeach; ?>
+
+
+                </div>
+
+
+            <?php else: ?>
+
+
+                <p class="empty-message">
+                    No notifications have been recorded yet.
+                </p>
+
+
+            <?php endif; ?>
+
+
+        </article>
+
+
+        <!-- RECENT ATTENDANCE -->
+
+        <article class="dashboard-panel">
+
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ATTENDANCE
+                    </span>
+
+                    <h2>
+                        Recent Check-ins
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="../attendance/index.php"
+                    class="panel-action-link"
+                >
+                    View Attendance
+                </a>
+
+            </div>
+
+
+            <?php if ($recentAttendance): ?>
+
+
+                <div class="admin-list">
+
+
+                    <?php foreach (
+                        $recentAttendance
+                        as $attendance
+                    ): ?>
+
+
+                        <div class="admin-list-row">
+
+
+                            <div>
+
+                                <strong>
+
+                                    <?=
+                                        adminEscape(
+                                            $attendance[
+                                                'first_name'
+                                            ] .
+                                            ' ' .
+                                            $attendance[
+                                                'last_name'
+                                            ]
+                                        )
+                                    ?>
+
+                                </strong>
+
+
+                                <span>
+
+                                    <?=
+                                        adminEscape(
+                                            $attendance[
+                                                'class_name'
+                                            ]
+                                        )
+                                    ?>
+
+                                </span>
+
+
+                                <small>
+
+                                    <?=
+                                        adminDate(
+                                            $attendance[
+                                                'attendance_date'
+                                            ]
+                                        )
+                                    ?>
+
+                                </small>
+
+                            </div>
+
+
+                            <span
+                                class="
+                                    admin-improved-status
+                                    admin-improved-attendance-<?=
+                                        adminEscape(
+                                            strtolower(
+                                                $attendance[
+                                                    'status'
+                                                ]
+                                            )
+                                        )
+                                    ?>
+                                "
+                            >
+
+                                <?=
+                                    adminEscape(
+                                        strtoupper(
+                                            $attendance[
+                                                'status'
+                                            ]
+                                        )
+                                    )
+                                ?>
+
+                            </span>
+
+
+                        </div>
+
+
+                    <?php endforeach; ?>
+
+
+                </div>
+
+
+            <?php else: ?>
+
+
+                <p class="empty-message">
+                    No attendance records yet.
+                </p>
+
+
+            <?php endif; ?>
+
+
+        </article>
+
+
+    </section>
+
+
+</div>
 
 </main>
 
 
+<!--
+==========================================================================
+FOOTER
+==========================================================================
+-->
+
 <footer>
 
-    <div class="container footer-content">
+    <div
+        class="
+            container
+            footer-content
+        "
+    >
 
         <div>
 
@@ -856,6 +2182,7 @@ function adminEscape(string $value): string
             </p>
 
         </div>
+
 
         <p>
             Administration Portal
